@@ -8,3 +8,5 @@ node_modules/
 __pycache__/
 *.pyc
 .pytest_cache/
+backend/data/*.sqlite3
+backend/data/*.sqlite3-*

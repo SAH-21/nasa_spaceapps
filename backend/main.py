@@ -1,14 +1,24 @@
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+import sqlite3
+from pathlib import Path
 
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, EmailStr, Field
+
+from backend.auth_database import (
+    DEFAULT_DB_PATH,
+    create_user,
+    get_user_by_id
+)
+from backend.auth_security import hash_password
 from backend.image_processing import IMAGE_PATH
 from backend.sonification import generate_sonification
 
 app = FastAPI(
     title="EarthPulse API",
     description="NASA Space Apps Challenge 2026 - Team Vertex",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 app.add_middleware(
@@ -22,9 +32,24 @@ app.add_middleware(
         "http://127.0.0.1:3000"
     ],
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"]
 )
+
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=12, max_length=128)
+
+
+class PublicUser(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: str
+
+
+def get_auth_db_path() -> Path:
+    return DEFAULT_DB_PATH
 
 
 @app.get("/")
@@ -71,3 +96,37 @@ def sonification():
         ),
         "data": result
     }
+
+
+@app.post(
+    "/api/auth/register",
+    response_model=PublicUser,
+    status_code=201
+)
+def register(
+    request: RegisterRequest,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    password_hash = hash_password(request.password)
+
+    try:
+        user_id = create_user(
+            email=str(request.email),
+            password_hash=password_hash,
+            db_path=db_path
+        )
+    except sqlite3.IntegrityError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail="Email already registered"
+        ) from exc
+
+    user = get_user_by_id(user_id, db_path)
+
+    if user is None:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve registered user"
+        )
+
+    return user
