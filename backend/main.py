@@ -24,6 +24,7 @@ from backend.auth_sessions import (
     get_session_user_id,
     revoke_session
 )
+from backend.nasa_power_api import router as science_router
 from backend.image_processing import IMAGE_PATH
 from backend.sonification import generate_sonification
 from backend.user_favorites import (
@@ -91,6 +92,8 @@ app.add_middleware(
     allow_headers=["Content-Type", "X-CSRF-Token"]
 )
 
+
+app.include_router(science_router)
 
 class RegisterRequest(BaseModel):
     email: EmailStr
