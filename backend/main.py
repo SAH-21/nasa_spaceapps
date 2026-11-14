@@ -1,39 +1,63 @@
 
+import hashlib
+import hmac
+import os
 import sqlite3
+
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 
 from backend.auth_database import (
     DEFAULT_DB_PATH,
     create_user,
+    get_user_by_email,
     get_user_by_id
 )
-from backend.auth_security import hash_password
+from backend.auth_security import hash_password, verify_password
+from backend.auth_sessions import (
+    SESSION_TTL_SECONDS,
+    create_session,
+    get_session_user_id,
+    revoke_session
+)
 from backend.image_processing import IMAGE_PATH
 from backend.sonification import generate_sonification
+
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+]
+
+SESSION_COOKIE_NAME = "earthsonic_session"
+COOKIE_SECURE = os.getenv(
+    "EARTHSONIC_ENV", "development"
+).lower() == "production"
+
+DUMMY_PASSWORD_HASH = hash_password(
+    "EarthsonicDummyPassword2026!"
+)
 
 app = FastAPI(
     title="EarthPulse API",
     description="NASA Space Apps Challenge 2026 - Team Vertex",
-    version="1.1.0"
+    version="1.2.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000"
-    ],
-    allow_credentials=False,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
     allow_methods=["GET", "POST"],
-    allow_headers=["*"]
+    allow_headers=["Content-Type", "X-CSRF-Token"]
 )
 
 
@@ -42,14 +66,68 @@ class RegisterRequest(BaseModel):
     password: str = Field(min_length=12, max_length=128)
 
 
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=1, max_length=128)
+
+
 class PublicUser(BaseModel):
     id: int
     email: EmailStr
     created_at: str
 
 
+class AuthSessionResponse(BaseModel):
+    user: PublicUser
+    csrf_token: str
+
+
+class LogoutResponse(BaseModel):
+    status: str
+
+
 def get_auth_db_path() -> Path:
     return DEFAULT_DB_PATH
+
+
+def validate_origin(request: Request):
+    origin = request.headers.get("origin")
+
+    if origin is not None and origin not in ALLOWED_ORIGINS:
+        raise HTTPException(
+            status_code=403,
+            detail="Origin not allowed"
+        )
+
+
+def create_csrf_token(session_token: str) -> str:
+    return hmac.new(
+        session_token.encode("utf-8"),
+        b"earthsonic-csrf-v1",
+        hashlib.sha256
+    ).hexdigest()
+
+
+def get_authenticated_session(request: Request, db_path: Path):
+    token = request.cookies.get(SESSION_COOKIE_NAME)
+
+    user_id = get_session_user_id(token, db_path)
+
+    if user_id is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated"
+        )
+
+    user = get_user_by_id(user_id, db_path)
+
+    if user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated"
+        )
+
+    return token, user
 
 
 @app.get("/")
@@ -130,3 +208,115 @@ def register(
         )
 
     return user
+
+
+@app.post(
+    "/api/auth/login",
+    response_model=AuthSessionResponse
+)
+def login(
+    request: Request,
+    response: Response,
+    credentials: LoginRequest,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    validate_origin(request)
+
+    user = get_user_by_email(str(credentials.email), db_path)
+
+    stored_hash = (
+        user["password_hash"]
+        if user is not None
+        else DUMMY_PASSWORD_HASH
+    )
+
+    password_valid = verify_password(
+        credentials.password,
+        stored_hash
+    )
+
+    if not password_valid or user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    token = create_session(user["id"], db_path)
+
+    response.set_cookie(
+        key=SESSION_COOKIE_NAME,
+        value=token,
+        max_age=SESSION_TTL_SECONDS,
+        httponly=True,
+        secure=COOKIE_SECURE,
+        samesite="lax",
+        path="/"
+    )
+
+    return {
+        "user": user,
+        "csrf_token": create_csrf_token(token)
+    }
+
+
+@app.get(
+    "/api/auth/me",
+    response_model=AuthSessionResponse
+)
+def current_user(
+    request: Request,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    token, user = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    return {
+        "user": user,
+        "csrf_token": create_csrf_token(token)
+    }
+
+
+@app.post(
+    "/api/auth/logout",
+    response_model=LogoutResponse
+)
+def logout(
+    request: Request,
+    response: Response,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    validate_origin(request)
+
+    token, _ = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    supplied_csrf = request.headers.get(
+        "x-csrf-token", ""
+    )
+
+    expected_csrf = create_csrf_token(token)
+
+    if not hmac.compare_digest(
+        supplied_csrf,
+        expected_csrf
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid CSRF token"
+        )
+
+    revoke_session(token, db_path)
+
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        path="/",
+        secure=COOKIE_SECURE,
+        httponly=True,
+        samesite="lax"
+    )
+
+    return {"status": "logged_out"}
