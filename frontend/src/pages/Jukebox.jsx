@@ -4,6 +4,7 @@ import AudioControls from '../components/AudioControls';
 import TrackMixer from '../components/TrackMixer';
 import AudioVisualizer from '../components/AudioVisualizer';
 import Timeline from '../components/Timeline';
+import MixStudio from '../components/MixStudio';
 import { STATIONS } from '../data/stations';
 import { dataService } from '../services/dataService';
 import { audioEngine } from '../services/audioEngine';
@@ -27,7 +28,11 @@ import {
 export default function Jukebox({ 
   selectedStation, 
   onSelectStation, 
-  onBackToHome 
+  onBackToHome,
+  user = null,
+  csrfToken = '',
+  pendingMix = null,
+  onLoadMix
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -102,6 +107,37 @@ export default function Jukebox({
       mounted = false;
     };
   }, [selectedStation.id]);
+
+  useEffect(() => {
+    const mix = pendingMix?.mix;
+    if (!mix || mix.station_id !== selectedStation.id) return;
+
+    const settings = mix.settings;
+    setMasterVolume(settings.master_volume);
+    setIsMuted(settings.is_muted);
+    setIsLooping(settings.is_looping);
+    setOverlayActive(settings.overlay_active);
+    setSpeechActive(settings.speech_active);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    audioEngine.stopEarthPulse();
+    audioEngine.toggleSpeech(settings.speech_active);
+    audioEngine.setMasterVolume(
+      settings.is_muted ? 0 : settings.master_volume / 100
+    );
+
+    const restoredTracks = {};
+
+    selectedStation.tracks.forEach((track) => {
+      const saved = settings.tracks?.[track.id];
+      const volume = saved?.volume ?? track.defaultVolume;
+      const muted = saved?.muted ?? false;
+      restoredTracks[track.id] = { volume, muted };
+      audioEngine.setTrackVolume(track.id, muted ? 0 : volume / 100);
+    });
+
+    setTracksState(restoredTracks);
+  }, [pendingMix, selectedStation.id]);
 
   // Real-time audio frequency stream modulation during playback
   useEffect(() => {
@@ -325,6 +361,23 @@ export default function Jukebox({
             </button>
           </div>
         </div>
+
+        <MixStudio
+          mode="jukebox"
+          user={user}
+          csrfToken={csrfToken}
+          stations={STATIONS}
+          station={selectedStation}
+          settings={{
+            master_volume: masterVolume,
+            is_muted: isMuted,
+            is_looping: isLooping,
+            overlay_active: overlayActive,
+            speech_active: speechActive,
+            tracks: tracksState
+          }}
+          onLoadMix={onLoadMix}
+        />
 
         {/* Workstation Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

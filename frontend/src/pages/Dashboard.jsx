@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import MixStudio from '../components/MixStudio';
 import {
   ArrowRight,
   AudioLines,
@@ -25,8 +26,11 @@ export default function Dashboard({
   onToggleFavorite,
   onSelectStation,
   onLaunchJukebox,
-  onExplore
+  onExplore,
+  csrfToken = '',
+  onLoadMix
 }) {
+  const [savedMixCount, setSavedMixCount] = useState(null);
   const email = user?.email || '';
   const explorerName = email
     ? email.split('@')[0]
@@ -57,8 +61,8 @@ export default function Dashboard({
     },
     {
       title: 'Saved Mixes',
-      value: 'Coming Soon',
-      subtitle: 'Your future sound creations',
+      value: savedMixCount === null ? '...' : String(savedMixCount),
+      subtitle: 'Your saved sound configurations',
       icon: AudioLines
     }
   ];
@@ -283,6 +287,15 @@ export default function Dashboard({
             </div>
           )}
         </section>
+
+        <MixStudio
+          mode="dashboard"
+          user={user}
+          csrfToken={csrfToken}
+          stations={stations}
+          onLoadMix={onLoadMix}
+          onCountChange={setSavedMixCount}
+        />
 
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
           <section className="rounded-2xl border border-[#294057] bg-[#111F32] p-6">

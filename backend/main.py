@@ -5,6 +5,7 @@ import os
 import sqlite3
 
 from pathlib import Path
+from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,15 @@ from backend.user_favorites import (
     add_favorite,
     list_favorites,
     remove_favorite
+)
+from backend.user_mixes import (
+    create_mix,
+    delete_mix,
+    get_mix,
+    list_mixes,
+    update_mix,
+    validate_mix_name,
+    validate_mix_settings
 )
 
 ALLOWED_ORIGINS = [
@@ -70,14 +80,14 @@ DUMMY_PASSWORD_HASH = hash_password(
 app = FastAPI(
     title="EarthPulse API",
     description="NASA Space Apps Challenge 2026 - Team Vertex",
-    version="1.3.0"
+    version="1.4.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["Content-Type", "X-CSRF-Token"]
 )
 
@@ -129,6 +139,31 @@ class FavoriteAddResponse(BaseModel):
 class FavoriteRemoveResponse(BaseModel):
     station_id: str
     removed: bool
+
+
+class MixRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    station_id: str = Field(min_length=1, max_length=32)
+    settings: dict[str, Any]
+
+
+class MixResponse(BaseModel):
+    id: int
+    name: str
+    station_id: str
+    settings: dict[str, Any]
+    created_at: str
+    updated_at: str
+
+
+class MixListResponse(BaseModel):
+    mixes: list[MixResponse]
+    count: int
+
+
+class MixDeleteResponse(BaseModel):
+    mix_id: int
+    deleted: bool
 
 
 def get_auth_db_path() -> Path:
@@ -217,6 +252,19 @@ def validate_supported_station(station_id: str):
             status_code=404,
             detail="NASA station not found"
         )
+
+
+def validate_mix_payload(payload: MixRequest):
+    validate_supported_station(payload.station_id)
+
+    try:
+        validate_mix_name(payload.name)
+        validate_mix_settings(payload.settings)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=422,
+            detail=str(error)
+        ) from error
 
 
 @app.get("/")
@@ -478,4 +526,161 @@ def delete_favorite(
     return {
         "station_id": station_id,
         "removed": removed
+    }
+
+
+@app.get(
+    "/api/user/mixes",
+    response_model=MixListResponse
+)
+def get_user_mixes(
+    request: Request,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    _, user = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    mixes = list_mixes(user["id"], db_path)
+
+    return {
+        "mixes": mixes,
+        "count": len(mixes)
+    }
+
+
+@app.get(
+    "/api/user/mixes/{mix_id}",
+    response_model=MixResponse
+)
+def get_user_mix(
+    request: Request,
+    mix_id: int,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    _, user = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    if mix_id <= 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    mix = get_mix(user["id"], mix_id, db_path)
+
+    if mix is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    return mix
+
+
+@app.post(
+    "/api/user/mixes",
+    response_model=MixResponse,
+    status_code=201
+)
+def save_user_mix(
+    request: Request,
+    payload: MixRequest,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    user = authenticate_mutation(
+        request,
+        db_path
+    )
+
+    validate_mix_payload(payload)
+
+    return create_mix(
+        user["id"],
+        payload.name,
+        payload.station_id,
+        payload.settings,
+        db_path
+    )
+
+
+@app.put(
+    "/api/user/mixes/{mix_id}",
+    response_model=MixResponse
+)
+def update_user_mix(
+    request: Request,
+    mix_id: int,
+    payload: MixRequest,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    user = authenticate_mutation(
+        request,
+        db_path
+    )
+
+    if mix_id <= 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    validate_mix_payload(payload)
+
+    mix = update_mix(
+        user["id"],
+        mix_id,
+        payload.name,
+        payload.station_id,
+        payload.settings,
+        db_path
+    )
+
+    if mix is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    return mix
+
+
+@app.delete(
+    "/api/user/mixes/{mix_id}",
+    response_model=MixDeleteResponse
+)
+def remove_user_mix(
+    request: Request,
+    mix_id: int,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    user = authenticate_mutation(
+        request,
+        db_path
+    )
+
+    if mix_id <= 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    deleted = delete_mix(
+        user["id"],
+        mix_id,
+        db_path
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Mix not found"
+        )
+
+    return {
+        "mix_id": mix_id,
+        "deleted": True
     }

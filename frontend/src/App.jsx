@@ -14,6 +14,7 @@ import { favoritesService } from './services/favoritesService';
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedStation, setSelectedStation] = useState(STATIONS[0]);
+  const [pendingMix, setPendingMix] = useState(null);
 
   const [authOpen, setAuthOpen] = useState(false);
   const [session, setSession] = useState(null);
@@ -169,11 +170,33 @@ export default function App() {
   }
 
   function handleSelectStation(station) {
+    setPendingMix(null);
     setSelectedStation(station);
 
     if (audioDescriptions) {
       audioEngine.playStationPreview(station.id);
     }
+  }
+
+  function handleLoadMix(mix) {
+    if (!sessionRef.current?.user) return;
+
+    const station = STATIONS.find((item) => item.id === mix.station_id);
+
+    if (!station) {
+      setAuthMessage('This saved mix references an unavailable station.');
+      return;
+    }
+
+    setSelectedStation(station);
+    setPendingMix((previous) => ({
+      mix,
+      requestId: (previous?.requestId || 0) + 1
+    }));
+    setAuthOpen(false);
+    setCurrentView('jukebox');
+    setAuthMessage(`Loaded mix "${mix.name}".`);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   function handleAuthenticated(data) {
@@ -201,6 +224,7 @@ export default function App() {
 
       sessionRef.current = null;
       setSession(null);
+      setPendingMix(null);
       setFavorites([]);
       setFavoriteBusyIds([]);
       setAuthOpen(false);
@@ -336,6 +360,8 @@ export default function App() {
         ) : currentView === 'dashboard' && session?.user ? (
           <Dashboard
             user={session.user}
+            csrfToken={session.csrf_token}
+            onLoadMix={handleLoadMix}
             stations={STATIONS}
             favorites={favorites}
             favoritesLoading={favoritesLoading}
@@ -348,6 +374,10 @@ export default function App() {
           />
         ) : currentView === 'jukebox' ? (
           <Jukebox
+            user={session?.user || null}
+            csrfToken={session?.csrf_token || ''}
+            pendingMix={pendingMix}
+            onLoadMix={handleLoadMix}
             selectedStation={selectedStation}
             onSelectStation={handleSelectStation}
             onBackToHome={() => handleNavigate('home')}
