@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Jukebox from './pages/Jukebox';
@@ -9,6 +9,7 @@ import AccessibilityControls from './components/AccessibilityControls';
 import { STATIONS } from './data/stations';
 import { audioEngine } from './services/audioEngine';
 import { authService } from './services/authService';
+import { favoritesService } from './services/favoritesService';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -19,6 +20,14 @@ export default function App() {
   const [authChecking, setAuthChecking] = useState(true);
   const [authBusy, setAuthBusy] = useState(false);
   const [authMessage, setAuthMessage] = useState('');
+
+  const [favorites, setFavorites] = useState([]);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
+  const [favoritesError, setFavoritesError] = useState('');
+  const [favoriteBusyIds, setFavoriteBusyIds] = useState([]);
+
+  const sessionRef = useRef(null);
+  const favoriteRequestsRef = useRef(new Set());
 
   const [highContrast, setHighContrast] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -32,6 +41,7 @@ export default function App() {
     authService.me()
       .then((data) => {
         if (active && data?.user) {
+          sessionRef.current = data;
           setSession(data);
           setCurrentView((view) =>
             view === 'home' ? 'dashboard' : view
@@ -49,6 +59,57 @@ export default function App() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!session?.user) {
+      setFavorites([]);
+      setFavoritesLoading(false);
+      setFavoritesError('');
+      setFavoriteBusyIds([]);
+      return;
+    }
+
+    let active = true;
+    const sessionToken = session.csrf_token;
+
+    setFavorites([]);
+    setFavoritesLoading(true);
+    setFavoritesError('');
+
+    favoritesService.list()
+      .then((data) => {
+        if (
+          active &&
+          sessionRef.current?.csrf_token === sessionToken
+        ) {
+          setFavorites(
+            data.favorites.map((item) => item.station_id)
+          );
+        }
+      })
+      .catch((error) => {
+        if (
+          active &&
+          sessionRef.current?.csrf_token === sessionToken
+        ) {
+          setFavoritesError(
+            error.message || 'Could not load your favorites.'
+          );
+        }
+      })
+      .finally(() => {
+        if (
+          active &&
+          sessionRef.current?.csrf_token === sessionToken
+        ) {
+          setFavoritesLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [session]);
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -116,6 +177,7 @@ export default function App() {
   }
 
   function handleAuthenticated(data) {
+    sessionRef.current = data;
     setSession(data);
     setAuthChecking(false);
     setAuthOpen(false);
@@ -137,7 +199,10 @@ export default function App() {
     try {
       await authService.logout(session.csrf_token);
 
+      sessionRef.current = null;
       setSession(null);
+      setFavorites([]);
+      setFavoriteBusyIds([]);
       setAuthOpen(false);
       setCurrentView('home');
       setAuthMessage('You have signed out successfully.');
@@ -147,6 +212,76 @@ export default function App() {
       );
     } finally {
       setAuthBusy(false);
+    }
+  }
+
+  async function handleToggleFavorite(station) {
+    const activeSession = sessionRef.current;
+
+    if (!activeSession?.user) {
+      setAuthOpen(true);
+      setAuthMessage('Sign in to save your favorite stations.');
+      return;
+    }
+
+    if (
+      favoritesLoading ||
+      authBusy ||
+      favoriteRequestsRef.current.has(station.id)
+    ) {
+      return;
+    }
+
+    const wasFavorite = favorites.includes(station.id);
+    const sessionToken = activeSession.csrf_token;
+
+    favoriteRequestsRef.current.add(station.id);
+
+    setFavoriteBusyIds((previous) => [
+      ...previous.filter((id) => id !== station.id),
+      station.id
+    ]);
+
+    setFavoritesError('');
+
+    try {
+      if (wasFavorite) {
+        await favoritesService.remove(
+          station.id,
+          sessionToken
+        );
+      } else {
+        await favoritesService.add(
+          station.id,
+          sessionToken
+        );
+      }
+
+      if (sessionRef.current?.csrf_token === sessionToken) {
+        setFavorites((previous) => {
+          if (wasFavorite) {
+            return previous.filter((id) => id !== station.id);
+          }
+
+          return previous.includes(station.id)
+            ? previous
+            : [...previous, station.id];
+        });
+      }
+    } catch (error) {
+      if (sessionRef.current?.csrf_token === sessionToken) {
+        setFavoritesError(
+          error.message || 'Unable to update your favorites.'
+        );
+      }
+    } finally {
+      favoriteRequestsRef.current.delete(station.id);
+
+      if (sessionRef.current?.csrf_token === sessionToken) {
+        setFavoriteBusyIds((previous) =>
+          previous.filter((id) => id !== station.id)
+        );
+      }
     }
   }
 
@@ -170,11 +305,7 @@ export default function App() {
         onSignIn={() => {
           setAuthMessage('');
           setAuthOpen(true);
-
-          window.scrollTo({
-            top: 0,
-            behavior: 'auto'
-          });
+          window.scrollTo({ top: 0, behavior: 'auto' });
         }}
         onSignOut={handleSignOut}
       />
@@ -206,6 +337,11 @@ export default function App() {
           <Dashboard
             user={session.user}
             stations={STATIONS}
+            favorites={favorites}
+            favoritesLoading={favoritesLoading}
+            favoritesError={favoritesError}
+            favoriteBusyIds={favoriteBusyIds}
+            onToggleFavorite={handleToggleFavorite}
             onSelectStation={handleSelectStation}
             onLaunchJukebox={() => handleNavigate('jukebox')}
             onExplore={() => handleNavigate('home')}

@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Globe2,
   Heart,
+  Loader2,
   Radio,
   ShieldCheck,
   Sparkles,
@@ -17,6 +18,11 @@ import {
 export default function Dashboard({
   user,
   stations = [],
+  favorites = [],
+  favoritesLoading = false,
+  favoritesError = '',
+  favoriteBusyIds = [],
+  onToggleFavorite,
   onSelectStation,
   onLaunchJukebox,
   onExplore
@@ -25,6 +31,12 @@ export default function Dashboard({
   const explorerName = email
     ? email.split('@')[0]
     : 'Explorer';
+
+  const favoriteSet = new Set(favorites);
+
+  const savedStations = stations.filter((station) =>
+    favoriteSet.has(station.id)
+  );
 
   const cards = [
     {
@@ -35,14 +47,18 @@ export default function Dashboard({
     },
     {
       title: 'Favorites',
-      value: 'Coming Soon',
-      subtitle: 'Save your stations',
+      value: favoritesLoading
+        ? '...'
+        : favoritesError
+          ? '--'
+          : String(favorites.length),
+      subtitle: 'Your saved stations',
       icon: Heart
     },
     {
       title: 'Saved Mixes',
       value: 'Coming Soon',
-      subtitle: 'Keep your sound creations',
+      subtitle: 'Your future sound creations',
       icon: AudioLines
     }
   ];
@@ -50,6 +66,45 @@ export default function Dashboard({
   function openStation(station) {
     onSelectStation(station);
     onLaunchJukebox();
+  }
+
+  function isBusy(stationId) {
+    return favoritesLoading || favoriteBusyIds.includes(stationId);
+  }
+
+  function renderFavoriteButton(station) {
+    const saved = favoriteSet.has(station.id);
+    const busy = isBusy(station.id);
+
+    return (
+      <button
+        type="button"
+        onClick={() => onToggleFavorite(station)}
+        disabled={busy}
+        aria-label={
+          saved
+            ? `Remove ${station.shortName || station.title} from favorites`
+            : `Save ${station.shortName || station.title} to favorites`
+        }
+        aria-pressed={saved}
+        title={saved ? 'Remove favorite' : 'Add to favorites'}
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition disabled:cursor-wait disabled:opacity-60 ${
+          saved
+            ? 'border-rose-400/40 bg-rose-400/10 text-rose-300 hover:bg-rose-400/20'
+            : 'border-[#39546A] bg-[#142338] text-[#92AEC3] hover:border-[#75E4EF]/60 hover:text-[#75E4EF]'
+        }`}
+      >
+        {busy ? (
+          <Loader2 className="h-5 w-5 animate-spin" />
+        ) : (
+          <Heart
+            className={`h-5 w-5 ${
+              saved ? 'fill-current' : ''
+            }`}
+          />
+        )}
+      </button>
+    );
   }
 
   return (
@@ -73,8 +128,9 @@ export default function Dashboard({
               </h1>
 
               <p className="mt-4 max-w-xl text-sm leading-7 text-[#B8CBDF] sm:text-base">
-                Explore NASA Earth visualizations, discover data-driven
-                sounds, and continue your journey through our planet.
+                Explore NASA Earth visualizations, discover
+                data-driven sounds, and save the stations
+                you love to your personal collection.
               </p>
             </div>
 
@@ -140,16 +196,104 @@ export default function Dashboard({
           </div>
         </section>
 
+        {favoritesError && (
+          <div
+            role="alert"
+            className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-5 py-4 text-sm text-rose-200"
+          >
+            {favoritesError}
+          </div>
+        )}
+
+        <section
+          id="my-favorites"
+          className="rounded-2xl border border-[#294057] bg-[#111F32] p-6"
+        >
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <Heart className="h-5 w-5 fill-rose-400 text-rose-400" />
+                <h2 className="text-xl font-bold">
+                  My Favorite Stations
+                </h2>
+              </div>
+
+              <p className="text-sm text-[#ADC0D4]">
+                Your saved NASA stations, available whenever you sign in.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-[#59D8EF]/30 bg-[#59D8EF]/10 px-4 py-2 text-xs font-semibold text-[#85E9F0]">
+              {favoritesLoading
+                ? 'Loading...'
+                : `${savedStations.length} saved`}
+            </span>
+          </div>
+
+          {favoritesLoading ? (
+            <div
+              role="status"
+              className="flex items-center gap-3 rounded-xl border border-[#30465C] bg-[#0B1729] p-6 text-sm text-[#B8CBDF]"
+            >
+              <Loader2 className="h-5 w-5 animate-spin text-[#75E4EF]" />
+              Loading your favorite stations...
+            </div>
+          ) : savedStations.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-[#3C546A] bg-[#0B1729] px-5 py-10 text-center">
+              <Heart className="mx-auto mb-4 h-10 w-10 text-[#75E4EF]/60" />
+
+              <h3 className="font-semibold text-white">
+                No favorites saved yet
+              </h3>
+
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#96AEC5]">
+                Choose a station below and press its heart
+                button to add it to your collection.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2">
+              {savedStations.map((station) => (
+                <div
+                  key={station.id}
+                  className="flex items-center gap-3 rounded-xl border border-[#30465C] bg-[#0B1729] p-3"
+                >
+                  <button
+                    type="button"
+                    onClick={() => openStation(station)}
+                    className="group min-w-0 flex-1 rounded-lg p-2 text-left transition hover:bg-[#182D43]"
+                  >
+                    <p className="text-xs font-semibold text-[#75E4EF]">
+                      {station.svsId}
+                    </p>
+
+                    <h3 className="mt-1 truncate text-sm font-bold text-white">
+                      {station.shortName || station.title}
+                    </h3>
+
+                    <p className="mt-1 flex items-center gap-1 text-xs text-[#96AEC5]">
+                      Open in Jukebox
+                      <ArrowRight className="h-3 w-3 transition group-hover:translate-x-1" />
+                    </p>
+                  </button>
+
+                  {renderFavoriteButton(station)}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
           <section className="rounded-2xl border border-[#294057] bg-[#111F32] p-6">
-            <div className="mb-6 flex items-center justify-between gap-3">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-bold">
                   Explore NASA Stations
                 </h2>
 
                 <p className="mt-1 text-sm text-[#ADC0D4]">
-                  Select a station to open the Jukebox.
+                  Open a station or save it to your collection.
                 </p>
               </div>
 
@@ -157,29 +301,35 @@ export default function Dashboard({
             </div>
 
             <div className="space-y-3">
-              {stations.slice(0, 4).map((station) => (
-                <button
+              {stations.map((station) => (
+                <div
                   key={station.id}
-                  type="button"
-                  onClick={() => openStation(station)}
-                  className="group flex w-full items-center justify-between gap-4 rounded-xl border border-[#30465C] bg-[#0B1729] p-4 text-left transition hover:border-[#59D8EF]/60 hover:bg-[#152840]"
+                  className="flex items-center gap-3 rounded-xl border border-[#30465C] bg-[#0B1729] p-3 transition hover:border-[#59D8EF]/40"
                 >
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-[#75E4EF]">
-                      {station.svsId}
-                    </p>
+                  <button
+                    type="button"
+                    onClick={() => openStation(station)}
+                    className="group flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg p-2 text-left transition hover:bg-[#182D43]"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-[#75E4EF]">
+                        {station.svsId}
+                      </p>
 
-                    <h3 className="mt-1 truncate text-sm font-bold">
-                      {station.shortName || station.title}
-                    </h3>
+                      <h3 className="mt-1 truncate text-sm font-bold">
+                        {station.shortName || station.title}
+                      </h3>
 
-                    <p className="mt-1 truncate text-xs text-[#96AEC5]">
-                      {station.voiceName || 'Earth visualization'}
-                    </p>
-                  </div>
+                      <p className="mt-1 truncate text-xs text-[#96AEC5]">
+                        {station.voiceName || 'Earth visualization'}
+                      </p>
+                    </div>
 
-                  <ArrowRight className="h-5 w-5 shrink-0 text-[#75E4EF] transition group-hover:translate-x-1" />
-                </button>
+                    <ArrowRight className="h-5 w-5 shrink-0 text-[#75E4EF] transition group-hover:translate-x-1" />
+                  </button>
+
+                  {renderFavoriteButton(station)}
+                </div>
               ))}
             </div>
 
@@ -188,7 +338,7 @@ export default function Dashboard({
               onClick={onExplore}
               className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#75E4EF] hover:underline"
             >
-              View all stations
+              Explore the full Earthsonic homepage
               <ExternalLink className="h-4 w-4" />
             </button>
           </section>
@@ -197,6 +347,7 @@ export default function Dashboard({
             <div className="rounded-2xl border border-[#294057] bg-[#111F32] p-6">
               <div className="mb-5 flex items-center gap-2">
                 <UserRound className="h-5 w-5 text-[#75E4EF]" />
+
                 <h2 className="text-lg font-bold">
                   Your Account
                 </h2>
@@ -212,6 +363,7 @@ export default function Dashboard({
 
               <div className="mt-5 flex items-center gap-2 rounded-xl border border-[#3DD6BF]/20 bg-[#3DD6BF]/10 px-4 py-3">
                 <ShieldCheck className="h-5 w-5 text-[#3DD6BF]" />
+
                 <span className="text-sm text-[#B0F4DF]">
                   Authenticated session
                 </span>
@@ -221,21 +373,22 @@ export default function Dashboard({
             <div className="rounded-2xl border border-[#294057] bg-[#111F32] p-6">
               <div className="mb-3 flex items-center gap-2">
                 <Database className="h-5 w-5 text-[#75E4EF]" />
+
                 <h2 className="text-lg font-bold">
                   EarthPulse Engine
                 </h2>
               </div>
 
               <p className="text-sm leading-6 text-[#ADC0D4]">
-                The current backend processes a NASA night-lights
-                visualization into 100 brightness samples and
-                corresponding sound frequencies.
+                The current backend processes a NASA
+                night-lights visualization into 100 brightness
+                samples and corresponding sound frequencies.
               </p>
 
               <p className="mt-4 text-xs leading-5 text-[#96AEC5]">
                 This is relative image-brightness sonification,
-                not calibrated satellite radiance. Additional
-                stations may use demonstration data.
+                not calibrated satellite radiance.
+                Additional stations may use demonstration data.
               </p>
             </div>
           </section>

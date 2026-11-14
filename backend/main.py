@@ -25,7 +25,11 @@ from backend.auth_sessions import (
 )
 from backend.image_processing import IMAGE_PATH
 from backend.sonification import generate_sonification
-
+from backend.user_favorites import (
+    add_favorite,
+    list_favorites,
+    remove_favorite
+)
 
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -40,8 +44,21 @@ ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000"
 ]
 
+SUPPORTED_STATION_IDS = frozenset({
+    "svs-4950",
+    "svs-4960",
+    "svs-5011",
+    "svs-5196",
+    "svs-5425",
+    "svs-5533",
+    "svs-5669",
+    "svs-3912",
+    "svs-5313",
+    "svs-13786"
+})
 
 SESSION_COOKIE_NAME = "earthsonic_session"
+
 COOKIE_SECURE = os.getenv(
     "EARTHSONIC_ENV", "development"
 ).lower() == "production"
@@ -53,14 +70,14 @@ DUMMY_PASSWORD_HASH = hash_password(
 app = FastAPI(
     title="EarthPulse API",
     description="NASA Space Apps Challenge 2026 - Team Vertex",
-    version="1.2.0"
+    version="1.3.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["Content-Type", "X-CSRF-Token"]
 )
 
@@ -90,6 +107,30 @@ class LogoutResponse(BaseModel):
     status: str
 
 
+class FavoriteRequest(BaseModel):
+    station_id: str = Field(min_length=1, max_length=32)
+
+
+class FavoriteItem(BaseModel):
+    station_id: str
+    created_at: str
+
+
+class FavoriteListResponse(BaseModel):
+    favorites: list[FavoriteItem]
+    count: int
+
+
+class FavoriteAddResponse(BaseModel):
+    station_id: str
+    added: bool
+
+
+class FavoriteRemoveResponse(BaseModel):
+    station_id: str
+    removed: bool
+
+
 def get_auth_db_path() -> Path:
     return DEFAULT_DB_PATH
 
@@ -112,7 +153,10 @@ def create_csrf_token(session_token: str) -> str:
     ).hexdigest()
 
 
-def get_authenticated_session(request: Request, db_path: Path):
+def get_authenticated_session(
+    request: Request,
+    db_path: Path
+):
     token = request.cookies.get(SESSION_COOKIE_NAME)
 
     user_id = get_session_user_id(token, db_path)
@@ -132,6 +176,47 @@ def get_authenticated_session(request: Request, db_path: Path):
         )
 
     return token, user
+
+
+def verify_csrf(request: Request, session_token: str):
+    supplied_token = request.headers.get(
+        "x-csrf-token", ""
+    )
+
+    expected_token = create_csrf_token(session_token)
+
+    if not hmac.compare_digest(
+        supplied_token,
+        expected_token
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid CSRF token"
+        )
+
+
+def authenticate_mutation(
+    request: Request,
+    db_path: Path
+):
+    validate_origin(request)
+
+    token, user = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    verify_csrf(request, token)
+
+    return user
+
+
+def validate_supported_station(station_id: str):
+    if station_id not in SUPPORTED_STATION_IDS:
+        raise HTTPException(
+            status_code=404,
+            detail="NASA station not found"
+        )
 
 
 @app.get("/")
@@ -226,7 +311,10 @@ def login(
 ):
     validate_origin(request)
 
-    user = get_user_by_email(str(credentials.email), db_path)
+    user = get_user_by_email(
+        str(credentials.email),
+        db_path
+    )
 
     stored_hash = (
         user["password_hash"]
@@ -298,20 +386,7 @@ def logout(
         db_path
     )
 
-    supplied_csrf = request.headers.get(
-        "x-csrf-token", ""
-    )
-
-    expected_csrf = create_csrf_token(token)
-
-    if not hmac.compare_digest(
-        supplied_csrf,
-        expected_csrf
-    ):
-        raise HTTPException(
-            status_code=403,
-            detail="Invalid CSRF token"
-        )
+    verify_csrf(request, token)
 
     revoke_session(token, db_path)
 
@@ -324,3 +399,83 @@ def logout(
     )
 
     return {"status": "logged_out"}
+
+
+@app.get(
+    "/api/user/favorites",
+    response_model=FavoriteListResponse
+)
+def get_favorites(
+    request: Request,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    _, user = get_authenticated_session(
+        request,
+        db_path
+    )
+
+    favorites = list_favorites(
+        user["id"],
+        db_path
+    )
+
+    return {
+        "favorites": favorites,
+        "count": len(favorites)
+    }
+
+
+@app.post(
+    "/api/user/favorites",
+    response_model=FavoriteAddResponse
+)
+def save_favorite(
+    request: Request,
+    favorite: FavoriteRequest,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    user = authenticate_mutation(
+        request,
+        db_path
+    )
+
+    validate_supported_station(favorite.station_id)
+
+    added = add_favorite(
+        user["id"],
+        favorite.station_id,
+        db_path
+    )
+
+    return {
+        "station_id": favorite.station_id,
+        "added": added
+    }
+
+
+@app.delete(
+    "/api/user/favorites/{station_id}",
+    response_model=FavoriteRemoveResponse
+)
+def delete_favorite(
+    request: Request,
+    station_id: str,
+    db_path: Path = Depends(get_auth_db_path)
+):
+    user = authenticate_mutation(
+        request,
+        db_path
+    )
+
+    validate_supported_station(station_id)
+
+    removed = remove_favorite(
+        user["id"],
+        station_id,
+        db_path
+    )
+
+    return {
+        "station_id": station_id,
+        "removed": removed
+    }
