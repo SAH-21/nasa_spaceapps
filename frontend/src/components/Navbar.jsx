@@ -1,124 +1,172 @@
+
 import React from 'react';
-import { 
-  Radio, 
-  Volume2, 
-  Sliders, 
-  Eye, 
-  Info, 
-  Sparkles,
-  ExternalLink,
-  Disc3,
-  Globe2
+import {
+  Eye,
+  Globe2,
+  Info,
+  Loader2,
+  LogIn,
+  LogOut,
+  Radio,
+  Sliders,
+  UserRound
 } from 'lucide-react';
 
-export default function Navbar({ 
-  currentView, 
-  onNavigate, 
-  onToggleAccessibility, 
+export default function Navbar({
+  currentView,
+  onNavigate,
+  onToggleAccessibility,
   isAccessibilityOpen,
-  selectedStation
+  selectedStation,
+  user,
+  authChecking,
+  authBusy,
+  onSignIn,
+  onSignOut
 }) {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-space-900/90 border-b border-space-700/80 transition-colors shadow-2xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          
-          {/* Logo & NASA Mission Tag */}
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => onNavigate('home')}
-              className="flex items-center gap-3 group text-left focus:outline-none focus:ring-2 focus:ring-earth-cyan rounded-lg p-1"
-              aria-label="EARTHSONIC Home"
-            >
-              <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-nasa-blue via-space-850 to-space-950 border border-earth-cyan/40 shadow-glow-cyan transition-transform group-hover:scale-105">
-                <Globe2 className="w-6 h-6 text-earth-cyan animate-[spin_20s_linear_infinite]" />
-                <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-earth-cyan opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-earth-cyan"></span>
+    <header className="sticky top-0 z-50 border-b border-space-700/80 bg-space-900/95 shadow-xl backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex min-h-16 items-center justify-between gap-3 py-3 sm:min-h-20">
+          <button
+            type="button"
+            onClick={() => onNavigate('home')}
+            className="group flex min-w-0 items-center gap-2 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-earth-cyan sm:gap-3"
+            aria-label="Earthsonic Home"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-earth-cyan/40 bg-gradient-to-br from-nasa-blue to-space-950">
+              <Globe2 className="h-6 w-6 text-earth-cyan" />
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="bg-gradient-to-r from-white to-earth-cyan bg-clip-text text-base font-extrabold tracking-wider text-transparent sm:text-xl">
+                  EARTHSONIC
+                </span>
+
+                <span className="hidden rounded border border-earth-cyan/30 bg-nasa-blue/30 px-2 py-0.5 text-[10px] font-semibold text-earth-cyan xl:inline">
+                  NASA 2026
                 </span>
               </div>
-              
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-display font-extrabold text-xl tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-earth-cyan">
-                    EARTHSONIC
-                  </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-nasa-blue/40 text-cyan-300 border border-earth-cyan/40 font-semibold tracking-wider">
-                    NASA 2026
-                  </span>
-                </div>
-                <p className="text-[11px] font-sans text-slate-300 tracking-wide hidden sm:block">
-                  The Earth Information Jukebox • 10 NASA SVS Sources
-                </p>
-              </div>
-            </button>
-          </div>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1.5 sm:gap-2.5">
+              <p className="hidden text-[11px] text-slate-300 lg:block">
+                The Earth Information Jukebox
+              </p>
+            </div>
+          </button>
+
+          <nav
+            aria-label="Main navigation"
+            className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+          >
             <button
+              type="button"
               onClick={() => onNavigate('home')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
+              className={`rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm ${
                 currentView === 'home'
-                  ? 'text-earth-cyan bg-earth-cyan/15 border border-earth-cyan/40 shadow-sm'
-                  : 'text-slate-300 hover:text-white hover:bg-space-800'
+                  ? 'border border-earth-cyan/40 bg-earth-cyan/15 text-earth-cyan'
+                  : 'text-slate-300 hover:bg-space-800 hover:text-white'
               }`}
             >
-              <span>Explore Overview</span>
+              Explore
             </button>
 
             <button
+              type="button"
               onClick={() => onNavigate('jukebox')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
+              className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
                 currentView === 'jukebox'
-                  ? 'text-space-950 bg-gradient-to-r from-earth-cyan to-teal-300 shadow-glow-cyan font-bold'
-                  : 'text-white bg-space-850 hover:bg-space-800 border border-space-700/80 shadow-md'
+                  ? 'bg-gradient-to-r from-earth-cyan to-teal-300 text-space-950'
+                  : 'border border-space-700 bg-space-850 text-white hover:bg-space-800'
               }`}
             >
-              <Radio className={`w-4 h-4 ${currentView === 'jukebox' ? 'text-space-950 animate-pulse' : 'text-earth-cyan'}`} />
-              <span>Jukebox</span>
-              {selectedStation && (
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border hidden md:inline-block ${
-                  currentView === 'jukebox' 
-                    ? 'bg-black/25 text-space-950 border-black/30 font-bold' 
-                    : 'bg-space-900 text-earth-cyan border-space-700'
-                }`}>
-                  {selectedStation.svsId || selectedStation.shortName}
+              <Radio className="h-4 w-4" />
+              <span className="hidden min-[420px]:inline">Jukebox</span>
+
+              {selectedStation && currentView === 'jukebox' && (
+                <span className="hidden text-[10px] font-bold md:inline">
+                  {selectedStation.svsId}
                 </span>
               )}
             </button>
 
             <a
               href="#stations"
-              onClick={() => currentView !== 'home' && onNavigate('home')}
-              className="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-space-800 transition-all hidden lg:flex items-center gap-1.5"
+              onClick={() => {
+                if (currentView !== 'home') onNavigate('home');
+              }}
+              className="hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-space-800 hover:text-white xl:flex"
             >
-              <Sliders className="w-3.5 h-3.5 text-earth-amber" />
-              <span>10 SVS Stations</span>
+              <Sliders className="h-4 w-4 text-earth-amber" />
+              Stations
             </a>
 
             <a
               href="#sonification-mapping"
-              onClick={() => currentView !== 'home' && onNavigate('home')}
-              className="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-space-800 transition-all hidden md:flex items-center gap-1.5"
+              onClick={() => {
+                if (currentView !== 'home') onNavigate('home');
+              }}
+              className="hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-space-800 hover:text-white xl:flex"
             >
-              <Info className="w-3.5 h-3.5 text-slate-400" />
-              <span>Voice Mappings</span>
+              <Info className="h-4 w-4" />
+              Voice Mappings
             </a>
 
-            {/* Accessibility Drawer Toggle */}
             <button
+              type="button"
               onClick={onToggleAccessibility}
-              aria-label="Toggle Accessibility Panel"
-              className={`p-2.5 rounded-xl border transition-all ${
+              aria-label="Toggle accessibility panel"
+              title="Accessibility controls"
+              className={`rounded-xl border p-2.5 transition ${
                 isAccessibilityOpen
-                  ? 'bg-earth-cyan/20 text-earth-cyan border-earth-cyan shadow-glow-cyan'
-                  : 'bg-space-850 text-slate-300 border-space-700 hover:text-white hover:border-slate-500'
+                  ? 'border-earth-cyan bg-earth-cyan/20 text-earth-cyan'
+                  : 'border-space-700 bg-space-850 text-slate-300 hover:text-white'
               }`}
-              title="Accessibility & Spoken Voice Controls"
             >
-              <Eye className="w-4 h-4" />
+              <Eye className="h-4 w-4" />
             </button>
+
+            {authChecking ? (
+              <div
+                className="flex h-10 w-10 items-center justify-center"
+                aria-label="Checking account session"
+              >
+                <Loader2 className="h-4 w-4 animate-spin text-earth-cyan" />
+              </div>
+            ) : user ? (
+              <div className="flex items-center gap-2">
+                <div
+                  className="hidden max-w-[150px] items-center gap-2 rounded-xl border border-earth-cyan/25 bg-earth-cyan/10 px-3 py-2 text-xs text-earth-cyan lg:flex"
+                  title={user.email}
+                >
+                  <UserRound className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{user.email}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onSignOut}
+                  disabled={authBusy}
+                  title="Sign Out"
+                  aria-label="Sign Out"
+                  className="flex items-center gap-1.5 rounded-xl border border-space-700 bg-space-850 px-2.5 py-2 text-xs font-semibold text-slate-200 transition hover:border-red-400/40 hover:text-white disabled:opacity-60 sm:px-3"
+                >
+                  {authBusy
+                    ? <Loader2 className="h-4 w-4 animate-spin" />
+                    : <LogOut className="h-4 w-4" />}
+                  <span className="hidden sm:inline">Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={onSignIn}
+                className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#59D8EF] to-[#3DD6BF] px-3 py-2.5 text-xs font-bold text-[#071521] transition hover:brightness-110 sm:px-4 sm:text-sm"
+              >
+                <LogIn className="h-4 w-4" />
+                <span className="hidden min-[420px]:inline">Sign In</span>
+              </button>
+            )}
           </nav>
         </div>
       </div>
