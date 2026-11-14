@@ -1,14 +1,14 @@
 
 import React from 'react';
 import {
+  Compass,
   Eye,
   Globe2,
-  Info,
+  LayoutDashboard,
   Loader2,
   LogIn,
   LogOut,
   Radio,
-  Sliders,
   UserRound
 } from 'lucide-react';
 
@@ -27,7 +27,7 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-50 border-b border-space-700/80 bg-space-900/95 shadow-xl backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-16 items-center justify-between gap-3 py-3 sm:min-h-20">
+        <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 py-3 sm:min-h-20">
           <button
             type="button"
             onClick={() => onNavigate('home')}
@@ -57,23 +57,26 @@ export default function Navbar({
 
           <nav
             aria-label="Main navigation"
-            className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+            className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2"
           >
             <button
               type="button"
               onClick={() => onNavigate('home')}
-              className={`rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm ${
+              aria-label="Explore Earthsonic"
+              className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm ${
                 currentView === 'home'
                   ? 'border border-earth-cyan/40 bg-earth-cyan/15 text-earth-cyan'
                   : 'text-slate-300 hover:bg-space-800 hover:text-white'
               }`}
             >
-              Explore
+              <Compass className="h-4 w-4 sm:hidden" />
+              <span className="hidden sm:inline">Explore</span>
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate('jukebox')}
+              aria-label="Open Jukebox"
               className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
                 currentView === 'jukebox'
                   ? 'bg-gradient-to-r from-earth-cyan to-teal-300 text-space-950'
@@ -81,36 +84,34 @@ export default function Navbar({
               }`}
             >
               <Radio className="h-4 w-4" />
-              <span className="hidden min-[420px]:inline">Jukebox</span>
+
+              <span className="hidden min-[420px]:inline">
+                Jukebox
+              </span>
 
               {selectedStation && currentView === 'jukebox' && (
-                <span className="hidden text-[10px] font-bold md:inline">
+                <span className="hidden text-[10px] font-bold lg:inline">
                   {selectedStation.svsId}
                 </span>
               )}
             </button>
 
-            <a
-              href="#stations"
-              onClick={() => {
-                if (currentView !== 'home') onNavigate('home');
-              }}
-              className="hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-space-800 hover:text-white xl:flex"
-            >
-              <Sliders className="h-4 w-4 text-earth-amber" />
-              Stations
-            </a>
-
-            <a
-              href="#sonification-mapping"
-              onClick={() => {
-                if (currentView !== 'home') onNavigate('home');
-              }}
-              className="hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-space-800 hover:text-white xl:flex"
-            >
-              <Info className="h-4 w-4" />
-              Voice Mappings
-            </a>
+            {user && (
+              <button
+                type="button"
+                onClick={() => onNavigate('dashboard')}
+                aria-label="Open My Space dashboard"
+                title="My Space"
+                className={`flex items-center gap-2 rounded-xl border px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm ${
+                  currentView === 'dashboard'
+                    ? 'border-[#59D8EF]/50 bg-[#59D8EF]/15 text-[#7CE7F0]'
+                    : 'border-space-700 bg-space-850 text-slate-200 hover:border-[#59D8EF]/40 hover:text-white'
+                }`}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                <span className="hidden sm:inline">My Space</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -136,11 +137,14 @@ export default function Navbar({
             ) : user ? (
               <div className="flex items-center gap-2">
                 <div
-                  className="hidden max-w-[150px] items-center gap-2 rounded-xl border border-earth-cyan/25 bg-earth-cyan/10 px-3 py-2 text-xs text-earth-cyan lg:flex"
+                  className="hidden max-w-[150px] items-center gap-2 rounded-xl border border-earth-cyan/25 bg-earth-cyan/10 px-3 py-2 text-xs text-earth-cyan xl:flex"
                   title={user.email}
                 >
                   <UserRound className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{user.email}</span>
+
+                  <span className="truncate">
+                    {user.email}
+                  </span>
                 </div>
 
                 <button
@@ -151,10 +155,15 @@ export default function Navbar({
                   aria-label="Sign Out"
                   className="flex items-center gap-1.5 rounded-xl border border-space-700 bg-space-850 px-2.5 py-2 text-xs font-semibold text-slate-200 transition hover:border-red-400/40 hover:text-white disabled:opacity-60 sm:px-3"
                 >
-                  {authBusy
-                    ? <Loader2 className="h-4 w-4 animate-spin" />
-                    : <LogOut className="h-4 w-4" />}
-                  <span className="hidden sm:inline">Sign Out</span>
+                  {authBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <LogOut className="h-4 w-4" />
+                  )}
+
+                  <span className="hidden lg:inline">
+                    Sign Out
+                  </span>
                 </button>
               </div>
             ) : (
@@ -164,7 +173,10 @@ export default function Navbar({
                 className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#59D8EF] to-[#3DD6BF] px-3 py-2.5 text-xs font-bold text-[#071521] transition hover:brightness-110 sm:px-4 sm:text-sm"
               >
                 <LogIn className="h-4 w-4" />
-                <span className="hidden min-[420px]:inline">Sign In</span>
+
+                <span className="hidden min-[420px]:inline">
+                  Sign In
+                </span>
               </button>
             )}
           </nav>

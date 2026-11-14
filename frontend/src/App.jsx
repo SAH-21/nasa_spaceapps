@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Jukebox from './pages/Jukebox';
+import Dashboard from './pages/Dashboard';
 import AuthPage from './pages/AuthPage';
 import AccessibilityControls from './components/AccessibilityControls';
 import { STATIONS } from './data/stations';
@@ -32,6 +33,9 @@ export default function App() {
       .then((data) => {
         if (active && data?.user) {
           setSession(data);
+          setCurrentView((view) =>
+            view === 'home' ? 'dashboard' : view
+          );
         }
       })
       .catch(() => {})
@@ -87,6 +91,12 @@ export default function App() {
   }, [authOpen]);
 
   function handleNavigate(view) {
+    if (view === 'dashboard' && !session?.user) {
+      setAuthMessage('');
+      setAuthOpen(true);
+      return;
+    }
+
     setAuthOpen(false);
     setAuthMessage('');
     setCurrentView(view);
@@ -107,8 +117,9 @@ export default function App() {
 
   function handleAuthenticated(data) {
     setSession(data);
+    setAuthChecking(false);
     setAuthOpen(false);
-    setCurrentView('home');
+    setCurrentView('dashboard');
     setAuthMessage('Successfully signed in to Earthsonic.');
 
     window.scrollTo({
@@ -159,7 +170,11 @@ export default function App() {
         onSignIn={() => {
           setAuthMessage('');
           setAuthOpen(true);
-          window.scrollTo({ top: 0, behavior: 'auto' });
+
+          window.scrollTo({
+            top: 0,
+            behavior: 'auto'
+          });
         }}
         onSignOut={handleSignOut}
       />
@@ -187,18 +202,26 @@ export default function App() {
             onBack={() => setAuthOpen(false)}
             onAuthenticated={handleAuthenticated}
           />
-        ) : currentView === 'home' ? (
+        ) : currentView === 'dashboard' && session?.user ? (
+          <Dashboard
+            user={session.user}
+            stations={STATIONS}
+            onSelectStation={handleSelectStation}
+            onLaunchJukebox={() => handleNavigate('jukebox')}
+            onExplore={() => handleNavigate('home')}
+          />
+        ) : currentView === 'jukebox' ? (
+          <Jukebox
+            selectedStation={selectedStation}
+            onSelectStation={handleSelectStation}
+            onBackToHome={() => handleNavigate('home')}
+          />
+        ) : (
           <Home
             stations={STATIONS}
             selectedStation={selectedStation}
             onSelectStation={handleSelectStation}
             onLaunchJukebox={() => handleNavigate('jukebox')}
-          />
-        ) : (
-          <Jukebox
-            selectedStation={selectedStation}
-            onSelectStation={handleSelectStation}
-            onBackToHome={() => handleNavigate('home')}
           />
         )}
       </main>
