@@ -1,9 +1,11 @@
+import { loadNasaImageSonification } from '../services/nasaImageSonification.mjs';
 import React, { useState, useEffect } from 'react';
-import EarthVideoPlayer from '../components/EarthVideoPlayer';
+import EarthImageViewer from '../components/EarthImageViewer';
+import EarthsonicEnhancements from '../components/EarthsonicEnhancements';
 import AudioControls from '../components/AudioControls';
 import TrackMixer from '../components/TrackMixer';
 import AudioVisualizer from '../components/AudioVisualizer';
-import Timeline from '../components/Timeline';
+import ImageBrightnessTimeline from '../components/ImageBrightnessTimeline';
 import MixStudio from '../components/MixStudio';
 import ScientificJukebox from '../components/ScientificJukebox';
 import { STATIONS } from '../data/stations';
@@ -61,6 +63,20 @@ export default function Jukebox({
     return initial;
   });
 
+
+  useEffect(() => {
+    let active = true;
+    setEarthPulseData(null);
+    loadNasaImageSonification(selectedStation.id)
+      .then(data => {
+        if (active) setEarthPulseData(data);
+      })
+      .catch(error => {
+        if (active) console.warn('NASA image feature analysis unavailable:', error.message);
+      });
+    return () => { active = false; };
+  }, [selectedStation.id]);
+
   // Check EarthPulse FastAPI backend connection on mount & load sonification data
   useEffect(() => {
     let mounted = true;
@@ -75,10 +91,7 @@ export default function Jukebox({
         setBackendStatus('standby');
       }
 
-      const sonification = await dataService.fetchEarthPulseSonification(backendUrl);
-      if (mounted) {
-        setEarthPulseData(sonification);
-      }
+
     }
 
     initBackend();
@@ -103,6 +116,7 @@ export default function Jukebox({
       newTrackState[tr.id] = { volume: tr.defaultVolume, muted: false };
     });
     setTracksState(newTrackState);
+    setIsPlaying(false);
     setCurrentTime(0);
 
     return () => {
@@ -215,15 +229,20 @@ export default function Jukebox({
     const health = await dataService.checkBackendHealth(backendUrl);
     setBackendStatus(health.online ? 'online' : 'standby');
 
-    const sonification = await dataService.fetchEarthPulseSonification(backendUrl);
-    setEarthPulseData(sonification);
+    try {
+      const sonification = await loadNasaImageSonification(selectedStation.id);
+      setEarthPulseData(sonification);
+    } catch (error) {
+      console.warn('NASA image analysis failed:', error.message);
+      setEarthPulseData(null);
+    }
     setIsSyncingBackend(false);
 
     if (speechActive) {
       audioEngine.speakText(
         health.online
-          ? `Connected to EarthPulse FastAPI backend. Received 100 normalized brightness values and frequencies between 180 and 760 Hertz.`
-          : `EarthPulse backend is in calibrated standby mode. Sonification engine ready.`
+          ? `Connected to the Earthsonic backend. This station uses NASA still-image feature sonification with 100 display-luminance samples.`
+          : `Backend is in standby. Image-feature sonification can run locally from downloaded NASA still images.`
       );
     }
   };
@@ -337,11 +356,11 @@ export default function Jukebox({
                     ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
                     : 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
                 }`}>
-                  {backendStatus === 'online' ? 'GET /api/sonification ONLINE' : 'STANDBY (Calibrated 100-pt Sonification)'}
+                  {backendStatus === 'online' ? 'FastAPI ONLINE' : 'Backend standby • local image scanning works'}
                 </span>
               </div>
               <p className="text-[11px] font-mono text-[#71717A] mt-0.5">
-                FastAPI Pillow Image Scanner • 100 Normalized Brightness & Frequencies (180 – 760 Hz)
+                Browser Canvas image scan • 100 normalized display-brightness samples (180–760 Hz)
               </p>
             </div>
           </div>
@@ -362,7 +381,7 @@ export default function Jukebox({
               onClick={handleSyncBackend}
               disabled={isSyncingBackend}
               className="px-3.5 py-2 rounded-xl bg-[#FAF9F6] hover:bg-[#EFECE6] text-[#18181B] border border-[#DCD7CD] hover:border-[#DCD7CD] text-xs font-mono flex items-center gap-2 transition-all cursor-pointer"
-              title="Poll GET /api/health and /api/sonification"
+              title="Check backend health and reload current NASA image analysis"
             >
               <RefreshCw className={`w-3.5 h-3.5 text-[#D97706] ${isSyncingBackend ? 'animate-spin' : ''}`} />
               <span>{isSyncingBackend ? 'Polling...' : 'Sync Backend'}</span>
@@ -387,6 +406,16 @@ export default function Jukebox({
           onLoadMix={onLoadMix}
         />
 
+        <EarthsonicEnhancements
+          station={selectedStation}
+          analysis={earthPulseData}
+          currentTime={currentTime}
+          duration={duration}
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          onSeek={handleSeek}
+        />
+
         <ScientificJukebox
           stopSignal={scienceStopSignal}
           onSciencePlay={() => {
@@ -404,7 +433,8 @@ export default function Jukebox({
           {/* Left Column: NASA Video Player + Synchronized Timeline (7 Cols) */}
           <div className="lg:col-span-7 space-y-6">
 
-            <EarthVideoPlayer
+            <EarthImageViewer
+              isLooping={isLooping}
               station={selectedStation}
               isPlaying={isPlaying}
               currentTime={currentTime}
@@ -413,11 +443,16 @@ export default function Jukebox({
               onSeek={handleSeek}
               overlayActive={overlayActive}
               onToggleOverlay={() => setOverlayActive(!overlayActive)}
+              onVideoDuration={(seconds) => setDuration(seconds)}
+              onVideoError={() => {
+                setIsPlaying(false);
+                audioEngine.stopEarthPulse();
+                if (typeof window !== 'undefined') window.speechSynthesis?.cancel();
+              }}
             />
 
-            <Timeline
-              station={selectedStation}
-              timelineData={timelineData}
+            <ImageBrightnessTimeline
+              brightness={earthPulseData?.brightness || []}
               currentTime={currentTime}
               duration={duration}
               onSeek={handleSeek}
@@ -496,7 +531,7 @@ export default function Jukebox({
 
               <div className="text-[11px] font-mono text-[#71717A] pt-1 flex justify-between">
                 <span>Sensor: {selectedStation.telemetry.instrument || selectedStation.telemetry.platform}</span>
-                <span className="text-[#D97706]">EarthPulse Synchronized</span>
+                <span className="text-[#D97706]">Image-derived sound · not physical measurements</span>
               </div>
             </div>
 

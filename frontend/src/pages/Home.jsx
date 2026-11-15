@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, ArrowUpRight, AudioLines, CalendarDays, Globe2, LockKeyhole, MapPin } from 'lucide-react';
 import Hero from '../components/Hero';
 import ScientificJukebox from '../components/ScientificJukebox';
 import GuestSciencePreview from '../components/GuestSciencePreview';
 import StationSelector from '../components/StationSelector';
+import ClimateComparison from '../components/ClimateComparison';
 import { NASA_CHALLENGE_INFO } from '../data/stations';
 
 const STEPS = [
@@ -13,6 +14,8 @@ const STEPS = [
 ];
 
 export default function Home({ isAuthenticated = false, onRequestAuth, scienceStopSignal = 0, stations, selectedStation, onSelectStation, onLaunchJukebox }) {
+  const [scienceStopFromCompare, setScienceStopFromCompare] = useState(0);
+  const [compareStopFromScience, setCompareStopFromScience] = useState(0);
   return (
     <div className="es-home editorial-home">
       <Hero onLaunchJukebox={onLaunchJukebox} onSelectStation={onSelectStation} canInteract={isAuthenticated} onRequireAuth={onRequestAuth}/>
@@ -23,8 +26,21 @@ export default function Home({ isAuthenticated = false, onRequestAuth, scienceSt
         </div>
       </section>
       <div id="earthsonic-science-section" className="es-science-slot">
-        {isAuthenticated ? <div className="es-container"><div className="es-section-heading"><div><p className="es-kicker">02 / LIVE SCIENCE WORKSTATION</p><h2>Listen to the climate.</h2><p>Select a location and dates, then play synchronized NASA POWER measurements.</p></div></div><ScientificJukebox stopSignal={scienceStopSignal}/></div> : <GuestSciencePreview onRequestAuth={onRequestAuth}/>}
+        {isAuthenticated ? <div className="es-container"><div className="es-section-heading"><div><p className="es-kicker">02 / LIVE SCIENCE WORKSTATION</p><h2>Listen to the climate.</h2><p>Select a location and dates, then play synchronized NASA POWER measurements.</p></div></div><ScientificJukebox stopSignal={scienceStopSignal + scienceStopFromCompare} onSciencePlay={() => setCompareStopFromScience(value => value + 1)}/></div> : <GuestSciencePreview onRequestAuth={onRequestAuth}/>}
       </div>
+      {isAuthenticated ? (
+        <ClimateComparison
+          stopSignal={scienceStopSignal + compareStopFromScience}
+          onSciencePlay={() => setScienceStopFromCompare(value => value + 1)}
+        />
+      ) : (
+        <section id="earthsonic-climate-comparison" className="es-compare-guest">
+          <div className="es-container es-compare-guest__layout">
+            <div><p className="es-compare-kicker">NEW / EARTHSONIC COMPARE</p><h2>Two places. One planetary soundtrack.</h2><p>Sign in to compare NASA POWER daily climate measurements and listen to two original data-driven soundscapes.</p></div>
+            <button type="button" onClick={() => onRequestAuth?.('login')}>Sign in to compare</button>
+          </div>
+        </section>
+      )}
       <StationSelector stations={stations} selectedStation={selectedStation} onSelectStation={onSelectStation} canInteract={isAuthenticated} onRequireAuth={onRequestAuth}/>
       <section className="es-source-section"><div className="es-container"><details className="es-scientific-details"><summary><span><strong>Understand the science behind each station</strong><small>Explore the artistic data-to-sound mapping concepts and original NASA sources.</small></span><ArrowUpRight size={20}/></summary><div className="es-scientific-details__table"><table><thead><tr><th>NASA visualization</th><th>Artistic mapping concept</th><th>Original source</th></tr></thead><tbody>{stations.map(station => <tr key={station.id}><td><strong>{station.svsId}</strong> {station.shortName}</td><td>{station.sonificationApproach}</td><td><a href={station.svsUrl} target="_blank" rel="noopener noreferrer">NASA SVS <ArrowUpRight size={12}/></a></td></tr>)}</tbody></table></div></details></div></section>
       <section className="es-final-cta"><div className="es-container es-final-cta__inner"><div><p className="es-kicker">THE EARTH INFORMATION JUKEBOX</p><h2>Your planet is waiting to be heard.</h2><p>Explore Earth observations and discover how scientific values can become an audio experience.</p></div><button className="es-button es-button--red" type="button" onClick={onLaunchJukebox}>{isAuthenticated ? 'Open the Jukebox' : 'Sign in to begin'} <ArrowRight size={18}/></button></div></section>
