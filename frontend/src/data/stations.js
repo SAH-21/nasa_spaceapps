@@ -13,7 +13,7 @@ export const STATIONS = [
     shortName: 'GEDI Forest Canopy',
     subtitle: 'Global Ecosystem Dynamics Investigation on ISS',
     category: 'Biosphere & Canopy Structure',
-    accentColor: '#10B981',
+    accentColor: '#71717A',
     accentClass: 'emerald',
     badgeText: 'SVS #4950 • Voice 1 (Harp & Woodwind)',
     svsUrl: 'http://svs.gsfc.nasa.gov/4950/',
@@ -37,9 +37,9 @@ export const STATIONS = [
       spectralHz: '110 Hz – 880 Hz'
     },
     tracks: [
-      { id: 'harp', name: 'Canopy Harp Arpeggio', defaultVolume: 85, enabled: true, color: '#10B981' },
-      { id: 'woodwind', name: 'Woodwind Biomass Body', defaultVolume: 75, enabled: true, color: '#059669' },
-      { id: 'ground', name: 'Sub-Canopy Ground Bed', defaultVolume: 60, enabled: true, color: '#34D399' }
+      { id: 'harp', name: 'Canopy Harp Arpeggio', defaultVolume: 85, enabled: true, color: '#71717A' },
+      { id: 'woodwind', name: 'Woodwind Biomass Body', defaultVolume: 75, enabled: true, color: '#71717A' },
+      { id: 'ground', name: 'Sub-Canopy Ground Bed', defaultVolume: 60, enabled: true, color: '#71717A' }
     ]
   },
   {
@@ -50,7 +50,7 @@ export const STATIONS = [
     shortName: '3D Atmospheric River',
     subtitle: 'Goddard MERRA-2 Global Hydrological Flow',
     category: 'Vapor Transport & Moisture Density',
-    accentColor: '#00E5FF',
+    accentColor: '#0B3D91',
     accentClass: 'cyan',
     badgeText: 'SVS #4960 • Voice 2 (Native NASA Narration + Rain Pad)',
     svsUrl: 'http://svs.gsfc.nasa.gov/4960/',
@@ -74,9 +74,9 @@ export const STATIONS = [
       spectralHz: '65 Hz – 2.4 kHz'
     },
     tracks: [
-      { id: 'rainPad', name: 'Moisture Rain Pad', defaultVolume: 80, enabled: true, color: '#00E5FF' },
-      { id: 'vaporSweep', name: 'Vapor Transport Sweep', defaultVolume: 70, enabled: true, color: '#06B6D4' },
-      { id: 'windNoise', name: 'High-Altitude Wind Shimmer', defaultVolume: 55, enabled: true, color: '#38BDF8' }
+      { id: 'rainPad', name: 'Moisture Rain Pad', defaultVolume: 80, enabled: true, color: '#0B3D91' },
+      { id: 'vaporSweep', name: 'Vapor Transport Sweep', defaultVolume: 70, enabled: true, color: '#0B3D91' },
+      { id: 'windNoise', name: 'High-Altitude Wind Shimmer', defaultVolume: 55, enabled: true, color: '#0B3D91' }
     ]
   },
   {
@@ -87,7 +87,7 @@ export const STATIONS = [
     shortName: 'ISS Lightning Events',
     subtitle: 'Lightning Imaging Sensor on the International Space Station',
     category: 'Electromagnetic Optical Transients',
-    accentColor: '#FFB703',
+    accentColor: '#D97706',
     accentClass: 'amber',
     badgeText: 'SVS #5011 • Voice 3 (Orbital Percussion)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5011/',
@@ -111,9 +111,9 @@ export const STATIONS = [
       platform: 'International Space Station'
     },
     tracks: [
-      { id: 'marimbaHits', name: 'Marimba Flash Strikes', defaultVolume: 90, enabled: true, color: '#FFB703' },
-      { id: 'subKick', name: 'Radiant Sub-Kick Boom', defaultVolume: 80, enabled: true, color: '#F97316' },
-      { id: 'stormHiss', name: 'Cloud Cluster Shimmer', defaultVolume: 50, enabled: true, color: '#FDE047' }
+      { id: 'marimbaHits', name: 'Marimba Flash Strikes', defaultVolume: 90, enabled: true, color: '#D97706' },
+      { id: 'subKick', name: 'Radiant Sub-Kick Boom', defaultVolume: 80, enabled: true, color: '#D97706' },
+      { id: 'stormHiss', name: 'Cloud Cluster Shimmer', defaultVolume: 50, enabled: true, color: '#D97706' }
     ]
   },
   {
@@ -124,7 +124,7 @@ export const STATIONS = [
     shortName: 'DYAMOND CO2 ppm',
     subtitle: 'Global High-Resolution Atmospheric CO2 Simulation',
     category: 'Biogeochemical Respiration',
-    accentColor: '#EF4444',
+    accentColor: '#FC3D21',
     accentClass: 'red',
     badgeText: 'SVS #5196 • Voice 4 (Breathing Sub-Bass)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5196/',
@@ -148,9 +148,9 @@ export const STATIONS = [
       platform: 'Orbiting Carbon Observatory-2'
     },
     tracks: [
-      { id: 'breathingBass', name: 'Respiration Sub-Bass', defaultVolume: 85, enabled: true, color: '#EF4444' },
-      { id: 'emissionPulse', name: 'Anthropogenic Saw Pulse', defaultVolume: 70, enabled: true, color: '#F87171' },
-      { id: 'oceanSink', name: 'Deep Oceanic Sink Pad', defaultVolume: 60, enabled: true, color: '#B91C1C' }
+      { id: 'breathingBass', name: 'Respiration Sub-Bass', defaultVolume: 85, enabled: true, color: '#FC3D21' },
+      { id: 'emissionPulse', name: 'Anthropogenic Saw Pulse', defaultVolume: 70, enabled: true, color: '#FC3D21' },
+      { id: 'oceanSink', name: 'Deep Oceanic Sink Pad', defaultVolume: 60, enabled: true, color: '#FC3D21' }
     ]
   },
   {
@@ -161,7 +161,7 @@ export const STATIONS = [
     shortName: 'Perpetual Ocean 2',
     subtitle: 'High-Resolution Global Ocean Circulation Model',
     category: 'Hydrodynamics & Ocean Eddies',
-    accentColor: '#0284C7',
+    accentColor: '#0B3D91',
     accentClass: 'blue',
     badgeText: 'SVS #5425 • Voice 5 (Stereo Strings)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5425/',
@@ -185,9 +185,9 @@ export const STATIONS = [
       platform: 'NASA JPL Supercomputing Facility'
     },
     tracks: [
-      { id: 'surfaceViolin', name: 'Surface Violin Arpeggios', defaultVolume: 80, enabled: true, color: '#38BDF8' },
-      { id: 'deepCello', name: 'Abyssal Cello Drone', defaultVolume: 85, enabled: true, color: '#0284C7' },
-      { id: 'eddyMotion', name: 'Eddy Swell Modulator', defaultVolume: 65, enabled: true, color: '#0EA5E9' }
+      { id: 'surfaceViolin', name: 'Surface Violin Arpeggios', defaultVolume: 80, enabled: true, color: '#0B3D91' },
+      { id: 'deepCello', name: 'Abyssal Cello Drone', defaultVolume: 85, enabled: true, color: '#0B3D91' },
+      { id: 'eddyMotion', name: 'Eddy Swell Modulator', defaultVolume: 65, enabled: true, color: '#0B3D91' }
     ]
   },
   {
@@ -198,7 +198,7 @@ export const STATIONS = [
     shortName: 'Air Quality (GEOS-CF)',
     subtitle: 'Goddard Composition Forecasting Model',
     category: 'Atmospheric Chemistry & Human Health',
-    accentColor: '#A855F7',
+    accentColor: '#0B3D91',
     accentClass: 'purple',
     badgeText: 'SVS #5533 • Voice 6 (4-Stem Synth Choir)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5533/',
@@ -223,10 +223,10 @@ export const STATIONS = [
       platform: 'NASA Goddard Space Flight Center'
     },
     tracks: [
-      { id: 'pm25Voice', name: 'PM2.5 Particulate Tenor', defaultVolume: 80, enabled: true, color: '#A855F7' },
-      { id: 'o3Voice', name: 'Ozone Soprano Resonator', defaultVolume: 75, enabled: true, color: '#C084FC' },
-      { id: 'coVoice', name: 'Carbon Monoxide Bass', defaultVolume: 70, enabled: true, color: '#9333EA' },
-      { id: 'noxVoice', name: 'Nitrogen Dioxide Alto', defaultVolume: 60, enabled: true, color: '#7E22CE' }
+      { id: 'pm25Voice', name: 'PM2.5 Particulate Tenor', defaultVolume: 80, enabled: true, color: '#0B3D91' },
+      { id: 'o3Voice', name: 'Ozone Soprano Resonator', defaultVolume: 75, enabled: true, color: '#0B3D91' },
+      { id: 'coVoice', name: 'Carbon Monoxide Bass', defaultVolume: 70, enabled: true, color: '#0B3D91' },
+      { id: 'noxVoice', name: 'Nitrogen Dioxide Alto', defaultVolume: 60, enabled: true, color: '#0B3D91' }
     ]
   },
   {
@@ -237,7 +237,7 @@ export const STATIONS = [
     shortName: 'GEOS Aerosols 2025',
     subtitle: 'Global Multi-Species Atmospheric Circulation Model',
     category: 'Atmospheric Particulate Transport',
-    accentColor: '#F97316',
+    accentColor: '#D97706',
     accentClass: 'orange',
     badgeText: 'SVS #5669 • Voice 7 (4-Track Ensemble)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5669/',
@@ -262,10 +262,10 @@ export const STATIONS = [
       platform: 'NASA Goddard Earth Observing System'
     },
     tracks: [
-      { id: 'seaSaltBass', name: 'Blue Sea Salt Sub-Bass', defaultVolume: 85, enabled: true, color: '#0284C7' },
-      { id: 'dustViola', name: 'Pink Dust Viola', defaultVolume: 80, enabled: true, color: '#EC4899' },
-      { id: 'smokeLead', name: 'Orange Smoke Saw Lead', defaultVolume: 75, enabled: true, color: '#F97316' },
-      { id: 'sulfateBell', name: 'Green Sulfate Bell Chime', defaultVolume: 65, enabled: true, color: '#10B981' }
+      { id: 'seaSaltBass', name: 'Blue Sea Salt Sub-Bass', defaultVolume: 85, enabled: true, color: '#0B3D91' },
+      { id: 'dustViola', name: 'Pink Dust Viola', defaultVolume: 80, enabled: true, color: '#FC3D21' },
+      { id: 'smokeLead', name: 'Orange Smoke Saw Lead', defaultVolume: 75, enabled: true, color: '#D97706' },
+      { id: 'sulfateBell', name: 'Green Sulfate Bell Chime', defaultVolume: 65, enabled: true, color: '#71717A' }
     ]
   },
   {
@@ -276,7 +276,7 @@ export const STATIONS = [
     shortName: 'Sea Currents & Temperature',
     subtitle: 'Thermal Flow & Mesoscale Eddies (2007–2008)',
     category: 'Thermodynamics & Kinetic Energy',
-    accentColor: '#3B82F6',
+    accentColor: '#0B3D91',
     accentClass: 'blue',
     badgeText: 'SVS #3912 • Voice 8 (Thermal FM Rhodes)',
     svsUrl: 'http://svs.gsfc.nasa.gov/3912/',
@@ -300,9 +300,9 @@ export const STATIONS = [
       platform: 'NASA JPL / ECCO Project'
     },
     tracks: [
-      { id: 'fmRhodes', name: 'Thermal FM Rhodes Chords', defaultVolume: 85, enabled: true, color: '#3B82F6' },
-      { id: 'polarDrone', name: 'Polar Cold Sub Drone', defaultVolume: 75, enabled: true, color: '#1D4ED8' },
-      { id: 'thermalSweep', name: 'Thermal Gradient Chorus', defaultVolume: 60, enabled: true, color: '#60A5FA' }
+      { id: 'fmRhodes', name: 'Thermal FM Rhodes Chords', defaultVolume: 85, enabled: true, color: '#0B3D91' },
+      { id: 'polarDrone', name: 'Polar Cold Sub Drone', defaultVolume: 75, enabled: true, color: '#0B3D91' },
+      { id: 'thermalSweep', name: 'Thermal Gradient Chorus', defaultVolume: 60, enabled: true, color: '#0B3D91' }
     ]
   },
   {
@@ -313,7 +313,7 @@ export const STATIONS = [
     shortName: 'Night Lights (India Zoom)',
     subtitle: 'Decadal Anthropogenic Illumination Shift',
     category: 'Urbanization & Infrastructure Grids',
-    accentColor: '#C084FC',
+    accentColor: '#0B3D91',
     accentClass: 'purple',
     badgeText: 'SVS #5313 • Voice 9 (Urban Arpeggiator)',
     svsUrl: 'http://svs.gsfc.nasa.gov/5313/',
@@ -337,9 +337,9 @@ export const STATIONS = [
       platform: 'NASA / NOAA Joint Suomi NPP Satellite'
     },
     tracks: [
-      { id: 'urbanArp', name: 'Urban Tempo Arpeggiator', defaultVolume: 85, enabled: true, color: '#C084FC' },
-      { id: 'subLuminance', name: 'Sub-Bass Luminance Wave', defaultVolume: 80, enabled: true, color: '#A855F7' },
-      { id: 'gridPulse', name: 'Electrification Clock Pulse', defaultVolume: 65, enabled: true, color: '#E9D5FF' }
+      { id: 'urbanArp', name: 'Urban Tempo Arpeggiator', defaultVolume: 85, enabled: true, color: '#0B3D91' },
+      { id: 'subLuminance', name: 'Sub-Bass Luminance Wave', defaultVolume: 80, enabled: true, color: '#0B3D91' },
+      { id: 'gridPulse', name: 'Electrification Clock Pulse', defaultVolume: 65, enabled: true, color: '#0B3D91' }
     ]
   },
   {
@@ -350,7 +350,7 @@ export const STATIONS = [
     shortName: 'Caldwell 73 Sonification',
     subtitle: 'Official NASA Goddard Astronomical Sonification',
     category: 'NASA Official Sonification Benchmark',
-    accentColor: '#E879F9',
+    accentColor: '#0B3D91',
     accentClass: 'pink',
     badgeText: 'SVS #13786 • Voice 10 (NASA Reference Mode)',
     svsUrl: 'http://svs.gsfc.nasa.gov/13786/',
@@ -374,9 +374,9 @@ export const STATIONS = [
       platform: 'NASA Goddard Astronomy Sonification'
     },
     tracks: [
-      { id: 'caldwellChoir', name: 'Hubble Choir Pad', defaultVolume: 80, enabled: true, color: '#E879F9' },
-      { id: 'caldwellMarimba', name: 'Red/Orange Pixel Marimba', defaultVolume: 85, enabled: true, color: '#F472B6' },
-      { id: 'caldwellGlock', name: 'Blue Pixel Glockenspiel', defaultVolume: 75, enabled: true, color: '#FBCFE8' }
+      { id: 'caldwellChoir', name: 'Hubble Choir Pad', defaultVolume: 80, enabled: true, color: '#0B3D91' },
+      { id: 'caldwellMarimba', name: 'Red/Orange Pixel Marimba', defaultVolume: 85, enabled: true, color: '#FC3D21' },
+      { id: 'caldwellGlock', name: 'Blue Pixel Glockenspiel', defaultVolume: 75, enabled: true, color: '#FC3D21' }
     ]
   }
 ];

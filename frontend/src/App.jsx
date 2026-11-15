@@ -345,7 +345,7 @@ export default function App() {
 
   return (
     <div
-      className={`flex min-h-screen flex-col bg-space-900 font-sans text-slate-100 transition-colors ${
+      className={`flex min-h-screen flex-col bg-[#FAF9F6] font-sans text-[#18181B] transition-colors ${
         highContrast ? 'high-contrast' : ''
       } ${reducedMotion ? 'reduced-motion' : ''}`}
     >
@@ -368,7 +368,7 @@ export default function App() {
       {authMessage && (
         <div
           role="status"
-          className="border-b border-earth-cyan/20 bg-space-850 px-5 py-3 text-center text-sm text-earth-cyan"
+          className="border-b border-[#DCD7CD]/70 bg-[#EFECE6] px-5 py-3 text-center text-sm text-[#D97706]"
         >
           <span>{authMessage}</span>
 

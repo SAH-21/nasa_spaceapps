@@ -59,18 +59,18 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
 
     // Orbit radii & speeds
     const orbits = [
-      { name: 'Mercury', r: 70, speed: 2.4, color: '#94a3b8', size: 3 },
-      { name: 'Venus', r: 110, speed: 1.8, color: '#f59e0b', size: 5 },
-      { name: 'Earth', r: 160, speed: 1.2, color: '#00f0ff', size: 6.5, glow: true },
-      { name: 'Mars', r: 210, speed: 0.95, color: '#ef4444', size: 4 },
-      { name: 'Jupiter', r: 280, speed: 0.6, color: '#d97706', size: 11 },
-      { name: 'Saturn', r: 360, speed: 0.45, color: '#fcd34d', size: 9, hasRing: true },
-      { name: 'Uranus', r: 430, speed: 0.3, color: '#38bdf8', size: 6 },
-      { name: 'Neptune', r: 490, speed: 0.22, color: '#2563eb', size: 6 }
+      { name: 'Mercury', r: 70, speed: 2.4, color: '#0B3D91', size: 3 },
+      { name: 'Venus', r: 110, speed: 1.8, color: '#D97706', size: 5 },
+      { name: 'Earth', r: 160, speed: 1.2, color: '#0B3D91', size: 6.5, glow: true },
+      { name: 'Mars', r: 210, speed: 0.95, color: '#FC3D21', size: 4 },
+      { name: 'Jupiter', r: 280, speed: 0.6, color: '#D97706', size: 11 },
+      { name: 'Saturn', r: 360, speed: 0.45, color: '#D97706', size: 9, hasRing: true },
+      { name: 'Uranus', r: 430, speed: 0.3, color: '#0B3D91', size: 6 },
+      { name: 'Neptune', r: 490, speed: 0.22, color: '#0B3D91', size: 6 }
     ];
 
     const render = () => {
-      ctx.fillStyle = '#030712';
+      ctx.fillStyle = '#0B3D91';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const cx = canvas.width / 2;
@@ -94,10 +94,10 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
 
       // Central Glowing Sun
       const sunGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 65);
-      sunGrad.addColorStop(0, '#ffffff');
-      sunGrad.addColorStop(0.2, '#fef08a');
-      sunGrad.addColorStop(0.5, '#f59e0b');
-      sunGrad.addColorStop(0.8, '#ea580c');
+      sunGrad.addColorStop(0, '#71717A');
+      sunGrad.addColorStop(0.2, '#D97706');
+      sunGrad.addColorStop(0.5, '#D97706');
+      sunGrad.addColorStop(0.8, '#D97706');
       sunGrad.addColorStop(1, 'rgba(234, 88, 12, 0)');
 
       ctx.fillStyle = sunGrad;
@@ -127,14 +127,14 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
 
         // Earth special cyan atmospheric rim-glow
         if (planet.glow) {
-          ctx.strokeStyle = '#00f0ff';
+          ctx.strokeStyle = '#0B3D91';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(px, py, planet.size + 3, 0, Math.PI * 2);
           ctx.stroke();
 
           // Target callout label
-          ctx.fillStyle = '#00f0ff';
+          ctx.fillStyle = '#0B3D91';
           ctx.font = '10px "JetBrains Mono", monospace';
           ctx.fillText('TARGET: EARTH', px + 12, py - 6);
         }
@@ -179,7 +179,7 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
   return (
     <div 
       onClick={handleUserInteract}
-      className="fixed inset-0 z-50 bg-[#030712] overflow-hidden flex flex-col justify-between p-6 sm:p-10 select-none cursor-pointer"
+      className="fixed inset-0 z-50 bg-[#EFECE6] overflow-hidden flex flex-col justify-between p-6 sm:p-10 select-none cursor-pointer"
     >
       {/* Background Solar System Video with Canvas Fallback */}
       <video
@@ -197,20 +197,20 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
       />
 
       {/* Vignette & Ambient Radial Glow */}
-      <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#030712]/40 to-[#030712]/90 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#FAF9F6]/40 to-[#EFECE6]/90 pointer-events-none" />
 
       {/* Top Header Bar (HUD Style) */}
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-space-900/90 border border-cyan-500/40 text-cyan-400 shadow-[0_0_20px_rgba(0,240,255,0.25)] flex items-center gap-2">
-            <Radio className="w-5 h-5 animate-pulse text-[#00f0ff]" />
-            <span className="font-display font-extrabold text-sm sm:text-base tracking-widest text-white">
+          <div className="p-2.5 rounded-xl bg-[#FAF9F6]/95 border border-[#DCD7CD]/80 text-[#D97706] shadow-[0_0_20px_rgba(0,240,255,0.25)] flex items-center gap-2">
+            <Radio className="w-5 h-5 animate-pulse text-[#D97706]" />
+            <span className="font-display font-extrabold text-sm sm:text-base tracking-widest text-[#18181B]">
               NASA EIC // STAGE 01
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400 bg-space-950/80 px-3 py-1.5 rounded-lg border border-slate-800">
-            <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping" />
+          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#71717A] bg-[#EFECE6]/95 px-3 py-1.5 rounded-lg border border-[#DCD7CD]">
+            <span className="w-2 h-2 rounded-full bg-[#EFECE6] animate-ping" />
             <span>SOLAR SYSTEM TRAJECTORY LOCK</span>
           </div>
         </div>
@@ -218,39 +218,39 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
         {/* Top-Right Skip Intro Button with Countdown */}
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] block">
               APPROACH COUNTDOWN
             </span>
-            <span className="text-sm font-mono font-bold text-[#00f0ff]">
+            <span className="text-sm font-mono font-bold text-[#D97706]">
               T-{timeLeft.toString().padStart(2, '0')}s
             </span>
           </div>
 
           <button
             onClick={handleSkip}
-            className="px-4 py-2.5 rounded-xl bg-space-900/90 hover:bg-space-800 border border-slate-700/80 hover:border-cyan-400 text-slate-200 hover:text-white font-mono text-xs tracking-wider transition-all shadow-lg flex items-center gap-2 group cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-[#FAF9F6]/95 hover:bg-[#EFECE6] border border-[#DCD7CD]/80 hover:border-[#DCD7CD] text-[#18181B] hover:text-[#18181B] font-mono text-xs tracking-wider transition-all shadow-lg flex items-center gap-2 group cursor-pointer"
           >
             <span>Skip Intro</span>
-            <ArrowRight className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#D97706] group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>
 
       {/* Center Cinematic Title & Prompt */}
       <div className="relative z-10 text-center max-w-3xl mx-auto space-y-5 my-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 text-xs font-mono tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFECE6]/95 border border-[#DCD7CD]/80 text-[#D97706] text-xs font-mono tracking-widest">
           <Sparkles className="w-3.5 h-3.5" />
           <span>2026 NASA SPACE APPS CHALLENGE</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold font-display tracking-tight text-white drop-shadow-[0_0_35px_rgba(0,240,255,0.4)]">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold font-display tracking-tight text-[#18181B] drop-shadow-[0_0_35px_rgba(0,240,255,0.4)]">
           THE EARTH INFORMATION{' '}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00f0ff] via-[#14b8a6] to-[#f59e0b]">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFFDF9] via-[#FAF9F6] to-[#EFECE6]">
             JUKEBOX
           </span>
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-300 font-mono max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-[#71717A] font-mono max-w-xl mx-auto leading-relaxed">
           Approaching the third planet from the Sun. Translating multi-spectral planetary observation data into real-time multi-track audio sonification.
         </p>
 
@@ -258,30 +258,30 @@ export default function IntroSolarVideo({ onCompleteStage1 }) {
         <div className="pt-4">
           <button
             onClick={handleSkip}
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00f0ff] via-teal-400 to-[#14b8a6] hover:from-cyan-300 hover:to-teal-300 text-space-950 font-display font-extrabold text-sm sm:text-base tracking-wider shadow-[0_0_30px_rgba(0,240,255,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3 mx-auto cursor-pointer"
+            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#FFFDF9] via-[#FAF9F6] to-[#EFECE6] hover:from-[#FFFDF9] hover:to-[#EFECE6] text-[#18181B] font-display font-extrabold text-sm sm:text-base tracking-wider shadow-[0_0_30px_rgba(0,240,255,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3 mx-auto cursor-pointer"
           >
-            <Globe className="w-5 h-5 text-space-950" />
+            <Globe className="w-5 h-5 text-[#18181B]" />
             <span>Enter the Earth Jukebox</span>
-            <ArrowRight className="w-4 h-4 text-space-950" />
+            <ArrowRight className="w-4 h-4 text-[#18181B]" />
           </button>
 
-          <span className="text-[11px] font-mono text-slate-500 block mt-2.5">
+          <span className="text-[11px] font-mono text-[#71717A] block mt-2.5">
             Auto-advancing in {timeLeft} seconds • Click anywhere to enable Web Audio
           </span>
         </div>
       </div>
 
       {/* Bottom Telemetry HUD Line */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between text-xs font-mono text-slate-500 border-t border-slate-800/80 pt-4 gap-2">
+      <div className="relative z-10 flex flex-wrap items-center justify-between text-xs font-mono text-[#71717A] border-t border-[#DCD7CD]/80 pt-4 gap-2">
         <div className="flex items-center gap-3">
-          <span className="text-slate-400">MISSION: EIC-2026</span>
+          <span className="text-[#71717A]">MISSION: EIC-2026</span>
           <span>•</span>
-          <span className="text-cyan-400">AUDIO ENGINE READY</span>
+          <span className="text-[#D97706]">AUDIO ENGINE READY</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-slate-400">OBSIDIAN DEEP-SPACE FIELD</span>
-          <span className="text-cyan-400">[030712]</span>
+          <span className="text-[#71717A]">OBSIDIAN DEEP-SPACE FIELD</span>
+          <span className="text-[#D97706]">[030712]</span>
         </div>
       </div>
     </div>

@@ -1,32 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Radio, 
-  ArrowLeft, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Volume2, 
-  VolumeX, 
-  Sliders, 
-  Layers, 
-  Activity, 
-  Sparkles, 
-  Eye, 
-  Upload, 
-  CheckCircle2, 
-  AlertCircle, 
-  Clock, 
-  MapPin, 
+import {
+  Radio,
+  ArrowLeft,
+  Play,
+  Pause,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  Sliders,
+  Layers,
+  Activity,
+  Sparkles,
+  Eye,
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  MapPin,
   X,
   FileCode,
   Globe
 } from 'lucide-react';
-import { 
-  NASA_EIC_STATIONS, 
-  REGIONAL_CALLOUTS, 
-  MULTI_BAND_SPECTRUM_DATA, 
-  ACOUSTIC_LAYER_BREAKDOWN, 
-  TEMPORAL_WAVEFORM_POINTS 
+import {
+  NASA_EIC_STATIONS,
+  REGIONAL_CALLOUTS,
+  MULTI_BAND_SPECTRUM_DATA,
+  ACOUSTIC_LAYER_BREAKDOWN,
+  TEMPORAL_WAVEFORM_POINTS
 } from '../data/nasaMockData';
 import { audioEngine } from '../services/audioEngine';
 
@@ -49,10 +49,10 @@ export default function SonificationDashboardHUD({
 
   // Mixer stem channels state
   const [mixerChannels, setMixerChannels] = useState({
-    dustStrings: { name: 'Track 1: Dust Strings', volume: 85, muted: false, solo: false, color: '#f59e0b' },
-    smokeBass: { name: 'Track 2: Smoke Bass Synth', volume: 75, muted: false, solo: false, color: '#ef4444' },
-    lightningPerc: { name: 'Track 3: ISS Lightning Percussion', volume: 90, muted: false, solo: false, color: '#00f0ff' },
-    nightLightsArp: { name: 'Track 4: Night Lights Arp', volume: 70, muted: false, solo: false, color: '#10b981' },
+    dustStrings: { name: 'Track 1: Dust Strings', volume: 85, muted: false, solo: false, color: '#D97706' },
+    smokeBass: { name: 'Track 2: Smoke Bass Synth', volume: 75, muted: false, solo: false, color: '#FC3D21' },
+    lightningPerc: { name: 'Track 3: ISS Lightning Percussion', volume: 90, muted: false, solo: false, color: '#0B3D91' },
+    nightLightsArp: { name: 'Track 4: Night Lights Arp', volume: 70, muted: false, solo: false, color: '#71717A' },
   });
 
   const globeHUDCanvasRef = useRef(null);
@@ -156,9 +156,9 @@ export default function SonificationDashboardHUD({
         cy,
         radius
       );
-      baseGrad.addColorStop(0, '#0d223a');
-      baseGrad.addColorStop(0.6, '#081424');
-      baseGrad.addColorStop(1, '#030712');
+      baseGrad.addColorStop(0, '#0B3D91');
+      baseGrad.addColorStop(0.6, '#0B3D91');
+      baseGrad.addColorStop(1, '#0B3D91');
 
       ctx.fillStyle = baseGrad;
       ctx.beginPath();
@@ -208,7 +208,7 @@ export default function SonificationDashboardHUD({
         ctx.fill();
 
         if (isRegSelected) {
-          ctx.strokeStyle = '#ffffff';
+          ctx.strokeStyle = '#71717A';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(px, py, 10, 0, Math.PI * 2);
@@ -219,7 +219,7 @@ export default function SonificationDashboardHUD({
       ctx.restore();
 
       // Atmospheric Rim
-      ctx.strokeStyle = '#00f0ff';
+      ctx.strokeStyle = '#0B3D91';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
@@ -251,39 +251,39 @@ export default function SonificationDashboardHUD({
   };
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col justify-between p-3 sm:p-6 font-sans">
-      
+    <div className="min-h-screen bg-[#EFECE6] text-[#18181B] flex flex-col justify-between p-3 sm:p-6 font-sans">
+
       {/* 1. TOP HEADER BAR */}
-      <header className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-space-900/90 border border-slate-800/80 shadow-2xl backdrop-blur-xl mb-6">
-        
+      <header className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD]/80 shadow-2xl backdrop-blur-xl mb-6">
+
         {/* Left: Branding & Station Badge */}
         <div className="flex items-center gap-3">
           <button
             onClick={onBackToStage2}
-            className="p-2 rounded-xl bg-space-950 border border-slate-800 text-slate-400 hover:text-white transition-colors text-xs font-mono flex items-center gap-1.5"
+            className="p-2 rounded-xl bg-[#EFECE6] border border-[#DCD7CD] text-[#71717A] hover:text-[#18181B] transition-colors text-xs font-mono flex items-center gap-1.5"
             title="Return to Orbit View"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Orbit View</span>
           </button>
 
-          <div className="h-6 w-[1px] bg-slate-800" />
+          <div className="h-6 w-[1px] bg-[#EFECE6]" />
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm font-extrabold font-display tracking-wider text-white">
+              <span className="text-xs sm:text-sm font-extrabold font-display tracking-wider text-[#18181B]">
                 THE EARTH INFORMATION JUKEBOX
               </span>
-              <span className="text-xs font-mono text-[#00f0ff] hidden md:inline">
+              <span className="text-xs font-mono text-[#D97706] hidden md:inline">
                 // NASA EIC SONIFICATION
               </span>
             </div>
-            
+
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EFECE6]/95 text-[#D97706] border border-[#DCD7CD]/80 font-bold">
                 {station.badge}
               </span>
-              <span className="text-xs font-mono text-slate-400 hidden sm:inline">
+              <span className="text-xs font-mono text-[#71717A] hidden sm:inline">
                 {station.title}
               </span>
             </div>
@@ -291,14 +291,14 @@ export default function SonificationDashboardHUD({
         </div>
 
         {/* Middle: Live Clock & Anomaly Telemetry */}
-        <div className="hidden lg:flex items-center gap-4 px-4 py-2 rounded-xl bg-space-950 border border-slate-800 font-mono text-xs">
-          <div className="flex items-center gap-2 text-cyan-400">
+        <div className="hidden lg:flex items-center gap-4 px-4 py-2 rounded-xl bg-[#EFECE6] border border-[#DCD7CD] font-mono text-xs">
+          <div className="flex items-center gap-2 text-[#D97706]">
             <Clock className="w-3.5 h-3.5" />
             <span>TIME-LOCK: {currentTime.toFixed(1)}s / {duration.toFixed(1)}s</span>
           </div>
-          <span className="text-slate-700">|</span>
-          <div className="flex items-center gap-2 text-slate-400">
-            <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+          <span className="text-[#71717A]">|</span>
+          <div className="flex items-center gap-2 text-[#71717A]">
+            <Activity className="w-3.5 h-3.5 text-[#D97706] animate-pulse" />
             <span>ANOMALY: LOW | OPTICAL FLUX NORMAL | 47.2°N LAT</span>
           </div>
         </div>
@@ -308,10 +308,10 @@ export default function SonificationDashboardHUD({
           {/* Data Upload Hook */}
           <button
             onClick={() => setJsonModalOpen(true)}
-            className="px-3 py-1.5 rounded-lg bg-space-950 hover:bg-space-850 border border-slate-800 hover:border-cyan-400 text-slate-300 text-xs font-mono flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-lg bg-[#EFECE6] hover:bg-[#EFECE6] border border-[#DCD7CD] hover:border-[#DCD7CD] text-[#71717A] text-xs font-mono flex items-center gap-1.5 transition-all"
             title="Drop in custom OpenCV frame-extraction JSON telemetry"
           >
-            <Upload className="w-3.5 h-3.5 text-cyan-400" />
+            <Upload className="w-3.5 h-3.5 text-[#D97706]" />
             <span className="hidden sm:inline">Data Hook (JSON)</span>
           </button>
 
@@ -319,9 +319,9 @@ export default function SonificationDashboardHUD({
           <button
             onClick={() => setScreenReaderActive(!screenReaderActive)}
             className={`px-3 py-1.5 rounded-lg border text-xs font-mono flex items-center gap-1.5 transition-all ${
-              screenReaderActive 
-                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' 
-                : 'bg-space-950 text-slate-400 border-slate-800 hover:text-slate-200'
+              screenReaderActive
+                ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
+                : 'bg-[#EFECE6] text-[#71717A] border-[#DCD7CD] hover:text-[#18181B]'
             }`}
             title="Screen-Reader Voiceover Mode for Blind & Low-Vision Users"
           >
@@ -331,7 +331,7 @@ export default function SonificationDashboardHUD({
 
           <button
             onClick={onToggleAccessibility}
-            className="p-2 rounded-lg bg-space-950 text-slate-400 border border-slate-800 hover:text-white"
+            className="p-2 rounded-lg bg-[#EFECE6] text-[#71717A] border border-[#DCD7CD] hover:text-[#18181B]"
             title="Accessibility Settings"
           >
             <Sliders className="w-4 h-4" />
@@ -342,66 +342,66 @@ export default function SonificationDashboardHUD({
 
       {/* 2. MAIN WORKSPACE: LEFT 3 STACKED CHARTS + RIGHT GLOWING EARTH & CALLOUTS */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-start mb-6">
-        
+
         {/* LEFT COLUMN: 3 Stacked Glassmorphic Telemetry & Audio Charts (5 Cols) */}
         <div className="lg:col-span-5 space-y-4">
-          
+
           {/* Card 1: Multi-Band Frequency & Aerosol Spectrum (Bar Chart) */}
-          <div className="p-4 rounded-2xl bg-space-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
-              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#00f0ff]" />
+          <div className="p-4 rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD] shadow-xl backdrop-blur-md">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#DCD7CD]">
+              <span className="text-xs font-mono font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
                 Multi-Band Frequency & Aerosol Spectrum
               </span>
-              <span className="text-[10px] font-mono text-cyan-400">DUAL-SERIES</span>
+              <span className="text-[10px] font-mono text-[#D97706]">DUAL-SERIES</span>
             </div>
 
-            <p className="text-[11px] text-slate-400 font-mono mb-3">
+            <p className="text-[11px] text-[#71717A] font-mono mb-3">
               Comparing Series 1: NASA Pixel Intensity vs. Series 2: Synthesized Audio Frequency
             </p>
 
-            <div className="flex items-end gap-2 h-32 pt-2 px-1 border-b border-slate-800">
+            <div className="flex items-end gap-2 h-32 pt-2 px-1 border-b border-[#DCD7CD]">
               {MULTI_BAND_SPECTRUM_DATA.map((item, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-1 h-full justify-end group">
                   <div className="w-full flex gap-0.5 items-end justify-center h-full">
                     {/* Series 1: NASA Pixel Intensity (Cyan) */}
                     <div
-                      className="w-1.5 sm:w-2 bg-[#00f0ff] rounded-t transition-all group-hover:brightness-125"
+                      className="w-1.5 sm:w-2 bg-[#EFECE6] rounded-t transition-all group-hover:brightness-125"
                       style={{ height: `${isPlaying ? Math.min(100, item.pixelIntensity + Math.sin(currentTime + idx) * 15) : item.pixelIntensity}%` }}
                       title={`NASA Pixel Intensity: ${item.pixelIntensity}%`}
                     />
                     {/* Series 2: Synthesized Audio Frequency Hz (Amber) */}
                     <div
-                      className="w-1.5 sm:w-2 bg-[#f59e0b] rounded-t transition-all group-hover:brightness-125"
+                      className="w-1.5 sm:w-2 bg-[#EFECE6] rounded-t transition-all group-hover:brightness-125"
                       style={{ height: `${isPlaying ? Math.min(100, item.audioFreqHz + Math.cos(currentTime + idx) * 15) : item.audioFreqHz}%` }}
                       title={`Synthesized Audio Freq: ${item.audioFreqHz}%`}
                     />
                   </div>
-                  <span className="text-[8px] font-mono text-slate-500">{item.label}</span>
+                  <span className="text-[8px] font-mono text-[#71717A]">{item.label}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-2">
+            <div className="flex items-center justify-between text-[10px] font-mono text-[#71717A] mt-2">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#00f0ff]" />
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
                 Series 1: NASA Pixel Intensity
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
                 Series 2: Synthesized Audio Freq
               </span>
             </div>
           </div>
 
           {/* Card 2: Atmospheric & Acoustic Layer Breakdown (Donut Chart) */}
-          <div className="p-4 rounded-2xl bg-space-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
-              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+          <div className="p-4 rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD] shadow-xl backdrop-blur-md">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#DCD7CD]">
+              <span className="text-xs font-mono font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
                 Atmospheric & Acoustic Layer Breakdown
               </span>
-              <span className="text-[10px] font-mono text-emerald-400">LAYER SHARE</span>
+              <span className="text-[10px] font-mono text-[#D97706]">LAYER SHARE</span>
             </div>
 
             <div className="flex items-center gap-4">
@@ -409,17 +409,17 @@ export default function SonificationDashboardHUD({
               <div className="relative w-24 h-24 flex-shrink-0 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   {/* Dust 45% */}
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#f59e0b" strokeWidth="4.5" strokeDasharray="45 100" strokeDashoffset="0" />
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#D97706" strokeWidth="4.5" strokeDasharray="45 100" strokeDashoffset="0" />
                   {/* Smoke 28% */}
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#ef4444" strokeWidth="4.5" strokeDasharray="28 100" strokeDashoffset="-45" />
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#FC3D21" strokeWidth="4.5" strokeDasharray="28 100" strokeDashoffset="-45" />
                   {/* Sea Salt 17% */}
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#14b8a6" strokeWidth="4.5" strokeDasharray="17 100" strokeDashoffset="-73" />
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#0B3D91" strokeWidth="4.5" strokeDasharray="17 100" strokeDashoffset="-73" />
                   {/* Lightning 10% */}
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#00f0ff" strokeWidth="4.5" strokeDasharray="10 100" strokeDashoffset="-90" />
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#0B3D91" strokeWidth="4.5" strokeDasharray="10 100" strokeDashoffset="-90" />
                 </svg>
                 <div className="absolute text-center">
-                  <span className="text-xs font-mono font-bold text-white">4</span>
-                  <span className="text-[8px] font-mono text-slate-500 block">STEMS</span>
+                  <span className="text-xs font-mono font-bold text-[#18181B]">4</span>
+                  <span className="text-[8px] font-mono text-[#71717A] block">STEMS</span>
                 </div>
               </div>
 
@@ -427,11 +427,11 @@ export default function SonificationDashboardHUD({
               <div className="flex-1 space-y-1.5 text-xs font-mono">
                 {ACOUSTIC_LAYER_BREAKDOWN.map((layer, idx) => (
                   <div key={idx} className="flex justify-between items-center">
-                    <span className="flex items-center gap-1.5 text-slate-300">
+                    <span className="flex items-center gap-1.5 text-[#71717A]">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: layer.color }} />
                       <span className="truncate">{layer.name}</span>
                     </span>
-                    <span className="font-bold text-white">{layer.percentage}%</span>
+                    <span className="font-bold text-[#18181B]">{layer.percentage}%</span>
                   </div>
                 ))}
               </div>
@@ -439,17 +439,17 @@ export default function SonificationDashboardHUD({
           </div>
 
           {/* Card 3: Temporal Sonification Waveform (Dual-Spline Line Chart) */}
-          <div className="p-4 rounded-2xl bg-space-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
-              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
+          <div className="p-4 rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD] shadow-xl backdrop-blur-md">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#DCD7CD]">
+              <span className="text-xs font-mono font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
                 Temporal Sonification Waveform
               </span>
-              <span className="text-[10px] font-mono text-cyan-400">DUAL-SPLINE</span>
+              <span className="text-[10px] font-mono text-[#D97706]">DUAL-SPLINE</span>
             </div>
 
             {/* SVG Dual-Spline Waveform */}
-            <div className="h-28 w-full bg-space-950 rounded-xl border border-slate-800/80 p-2 relative overflow-hidden">
+            <div className="h-28 w-full bg-[#EFECE6] rounded-xl border border-[#DCD7CD]/80 p-2 relative overflow-hidden">
               <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50">
                 {/* Horizontal reference grid */}
                 <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
@@ -460,7 +460,7 @@ export default function SonificationDashboardHUD({
                 <path
                   d="M 0 30 Q 20 10, 40 25 T 70 15 T 100 28"
                   fill="none"
-                  stroke="#00f0ff"
+                  stroke="#0B3D91"
                   strokeWidth="1.8"
                 />
 
@@ -468,22 +468,22 @@ export default function SonificationDashboardHUD({
                 <path
                   d="M 0 20 Q 25 35, 50 18 T 80 32 T 100 16"
                   fill="none"
-                  stroke="#f59e0b"
+                  stroke="#D97706"
                   strokeWidth="1.8"
                   strokeDasharray="2 1"
                 />
               </svg>
 
               {/* Real-time playhead line */}
-              <div 
-                className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_8px_#fff]"
+              <div
+                className="absolute top-0 bottom-0 w-0.5 bg-[#EFECE6] shadow-[0_0_8px_#fff]"
                 style={{ left: `${(currentTime / duration) * 100}%` }}
               />
             </div>
 
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-2">
-              <span className="text-[#00f0ff]">Luminosity / Motion Index</span>
-              <span className="text-[#f59e0b]">Harmonic Pitch & Tempo</span>
+            <div className="flex items-center justify-between text-[10px] font-mono text-[#71717A] mt-2">
+              <span className="text-[#D97706]">Luminosity / Motion Index</span>
+              <span className="text-[#18181B]">Harmonic Pitch & Tempo</span>
             </div>
           </div>
 
@@ -491,29 +491,29 @@ export default function SonificationDashboardHUD({
 
         {/* RIGHT / CENTER AREA: Glowing Earth + Interactive Region Callouts (7 Cols) */}
         <div className="lg:col-span-7 space-y-4">
-          
+
           {/* Main Visualizer Globe HUD Container */}
-          <div className="relative rounded-2xl bg-space-900/90 border border-slate-800 shadow-2xl overflow-hidden p-4 min-h-[360px] flex flex-col justify-between">
-            
+          <div className="relative rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD] shadow-2xl overflow-hidden p-4 min-h-[360px] flex flex-col justify-between">
+
             {/* Top Telemetry Header inside Globe */}
-            <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-slate-800">
+            <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-[#DCD7CD]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span className="text-white font-bold">PLANETARY GEOSPATIAL TELEMETRY</span>
+                <span className="w-2 h-2 rounded-full bg-[#EFECE6] animate-ping" />
+                <span className="text-[#18181B] font-bold">PLANETARY GEOSPATIAL TELEMETRY</span>
               </div>
-              <span className="text-cyan-400">CLICK PINS TO AUDITION REGION</span>
+              <span className="text-[#D97706]">CLICK PINS TO AUDITION REGION</span>
             </div>
 
             {/* Canvas Earth */}
             <div className="relative flex-1 flex items-center justify-center my-2 min-h-[260px]">
-              <canvas 
+              <canvas
                 ref={globeHUDCanvasRef}
                 className="w-full h-full max-h-[340px] max-w-[340px] aspect-square block cursor-pointer"
               />
             </div>
 
             {/* Region Callout Selection Cards Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#DCD7CD]">
               {REGIONAL_CALLOUTS.map(reg => {
                 const isSelected = selectedRegion?.id === reg.id;
                 return (
@@ -522,17 +522,17 @@ export default function SonificationDashboardHUD({
                     onClick={() => handleSelectRegion(reg)}
                     className={`p-2.5 rounded-xl border text-left transition-all ${
                       isSelected
-                        ? 'bg-space-950 border-cyan-400 ring-1 ring-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.25)]'
-                        : 'bg-space-950/70 border-slate-800 hover:border-slate-700'
+                        ? 'bg-[#EFECE6] border-[#DCD7CD] ring-1 ring-[#0B3D91] shadow-[0_0_15px_rgba(0,240,255,0.25)]'
+                        : 'bg-[#EFECE6]/95 border-[#DCD7CD] hover:border-[#DCD7CD]'
                     }`}
                   >
                     <div className="flex items-center gap-1.5 mb-1">
-                      <MapPin className="w-3 h-3 text-cyan-400" />
-                      <span className="text-[11px] font-bold text-white truncate block">
+                      <MapPin className="w-3 h-3 text-[#D97706]" />
+                      <span className="text-[11px] font-bold text-[#18181B] truncate block">
                         {reg.name.split('/')[0]}
                       </span>
                     </div>
-                    <span className="text-[9px] font-mono text-slate-400 block truncate">
+                    <span className="text-[9px] font-mono text-[#71717A] block truncate">
                       {reg.lat}, {reg.lon}
                     </span>
                   </button>
@@ -542,31 +542,31 @@ export default function SonificationDashboardHUD({
 
             {/* Floating Localized HUD Telemetry Callout Card */}
             {selectedRegion && (
-              <div className="mt-3 p-3.5 rounded-xl bg-space-950/95 border border-cyan-500/40 shadow-2xl flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
+              <div className="mt-3 p-3.5 rounded-xl bg-[#EFECE6]/95 border border-[#DCD7CD]/80 shadow-2xl flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white">{selectedRegion.name}</span>
-                    <span className="text-[10px] text-cyan-400 px-1.5 py-0.2 rounded bg-cyan-950/80 border border-cyan-500/30">
+                    <span className="font-bold text-[#18181B]">{selectedRegion.name}</span>
+                    <span className="text-[10px] text-[#D97706] px-1.5 py-0.2 rounded bg-[#EFECE6]/95 border border-[#DCD7CD]/70">
                       {selectedRegion.soundNote}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-300 mt-0.5">
+                  <p className="text-[11px] text-[#71717A] mt-0.5">
                     {selectedRegion.phenomenon}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 text-[11px]">
                   <div>
-                    <span className="text-slate-500 block text-[9px]">AOD DENSITY</span>
-                    <span className="text-cyan-400 font-bold">{selectedRegion.telemetry.aodValue}</span>
+                    <span className="text-[#71717A] block text-[9px]">AOD DENSITY</span>
+                    <span className="text-[#D97706] font-bold">{selectedRegion.telemetry.aodValue}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[9px]">LIGHTNING FLUX</span>
-                    <span className="text-amber-400 font-bold">{selectedRegion.telemetry.lightningDensity}</span>
+                    <span className="text-[#71717A] block text-[9px]">LIGHTNING FLUX</span>
+                    <span className="text-[#D97706] font-bold">{selectedRegion.telemetry.lightningDensity}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[9px]">URBAN RADIANCE</span>
-                    <span className="text-emerald-400 font-bold">{selectedRegion.telemetry.urbanLuminance}</span>
+                    <span className="text-[#71717A] block text-[9px]">URBAN RADIANCE</span>
+                    <span className="text-[#D97706] font-bold">{selectedRegion.telemetry.urbanLuminance}</span>
                   </div>
                 </div>
               </div>
@@ -575,16 +575,16 @@ export default function SonificationDashboardHUD({
           </div>
 
           {/* 3. BOTTOM CENTER/RIGHT CONTROLS: CIRCULAR GAUGES & MULTI-TRACK MIXER */}
-          <div className="p-4 rounded-2xl bg-space-900/90 border border-slate-800 shadow-xl space-y-4">
-            
+          <div className="p-4 rounded-2xl bg-[#FAF9F6]/95 border border-[#DCD7CD] shadow-xl space-y-4">
+
             {/* Top Bar of Controls: Play/Pause, Timeline, & Two Circular Progress Gauges */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-800">
-              
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-[#DCD7CD]">
+
               {/* Transport Buttons */}
               <div className="flex items-center gap-3">
                 <button
                   onClick={handlePlayPause}
-                  className="w-11 h-11 rounded-xl bg-gradient-to-r from-[#00f0ff] to-teal-500 text-space-950 flex items-center justify-center font-bold shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-transform active:scale-95 cursor-pointer"
+                  className="w-11 h-11 rounded-xl bg-gradient-to-r from-[#FFFDF9] to-[#EFECE6] text-[#18181B] flex items-center justify-center font-bold shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-transform active:scale-95 cursor-pointer"
                   aria-label={isPlaying ? 'Pause Sonification' : 'Play Sonification'}
                 >
                   {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current translate-x-0.5" />}
@@ -592,34 +592,34 @@ export default function SonificationDashboardHUD({
 
                 <button
                   onClick={handleReset}
-                  className="p-2.5 rounded-xl bg-space-950 text-slate-400 hover:text-white border border-slate-800"
+                  className="p-2.5 rounded-xl bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] border border-[#DCD7CD]"
                   title="Reset to 00:00"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
 
                 <div className="text-xs font-mono">
-                  <span className="text-cyan-400 font-bold">{currentTime.toFixed(1)}s</span>
-                  <span className="text-slate-600"> / </span>
-                  <span className="text-slate-400">{duration.toFixed(1)}s</span>
+                  <span className="text-[#D97706] font-bold">{currentTime.toFixed(1)}s</span>
+                  <span className="text-[#71717A]"> / </span>
+                  <span className="text-[#71717A]">{duration.toFixed(1)}s</span>
                 </div>
               </div>
 
               {/* Two Circular Cyan Progress Gauges */}
               <div className="flex items-center gap-6">
-                
+
                 {/* Gauge 1: Sonification Sync % */}
                 <div className="flex items-center gap-2">
                   <div className="relative w-10 h-10 flex items-center justify-center">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#1e293b" strokeWidth="3" />
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#00f0ff" strokeWidth="3" strokeDasharray="98.4 100" />
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#0B3D91" strokeWidth="3" />
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#0B3D91" strokeWidth="3" strokeDasharray="98.4 100" />
                     </svg>
-                    <span className="absolute text-[9px] font-mono font-bold text-cyan-400">98%</span>
+                    <span className="absolute text-[9px] font-mono font-bold text-[#D97706]">98%</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono text-slate-400 block uppercase">Sonification Sync</span>
-                    <span className="text-[11px] font-mono font-bold text-white">98.4% Frame-Lock</span>
+                    <span className="text-[10px] font-mono text-[#71717A] block uppercase">Sonification Sync</span>
+                    <span className="text-[11px] font-mono font-bold text-[#18181B]">98.4% Frame-Lock</span>
                   </div>
                 </div>
 
@@ -627,14 +627,14 @@ export default function SonificationDashboardHUD({
                 <div className="flex items-center gap-2">
                   <div className="relative w-10 h-10 flex items-center justify-center">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#1e293b" strokeWidth="3" />
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray="78.5 100" />
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#0B3D91" strokeWidth="3" />
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#71717A" strokeWidth="3" strokeDasharray="78.5 100" />
                     </svg>
-                    <span className="absolute text-[9px] font-mono font-bold text-emerald-400">7.8</span>
+                    <span className="absolute text-[9px] font-mono font-bold text-[#D97706]">7.8</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono text-slate-400 block uppercase">Harmonic Index</span>
-                    <span className="text-[11px] font-mono font-bold text-white">7.85 / 10.0</span>
+                    <span className="text-[10px] font-mono text-[#71717A] block uppercase">Harmonic Index</span>
+                    <span className="text-[11px] font-mono font-bold text-[#18181B]">7.85 / 10.0</span>
                   </div>
                 </div>
 
@@ -644,7 +644,7 @@ export default function SonificationDashboardHUD({
 
             {/* Horizontal Multi-Track Jukebox Mixer Bars with Mute / Solo */}
             <div className="space-y-2.5">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+              <div className="flex items-center justify-between text-xs font-mono text-[#71717A]">
                 <span>MULTI-TRACK JUKEBOX STEM MIXER</span>
                 <span>WEB AUDIO PENTATONIC SYNTH</span>
               </div>
@@ -652,18 +652,18 @@ export default function SonificationDashboardHUD({
               {Object.keys(mixerChannels).map(key => {
                 const track = mixerChannels[key];
                 return (
-                  <div 
+                  <div
                     key={key}
                     className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-3 text-xs font-mono transition-all ${
-                      track.muted 
-                        ? 'bg-space-950/60 border-slate-800 opacity-50' 
-                        : 'bg-space-950 border-slate-800/80 hover:border-slate-700'
+                      track.muted
+                        ? 'bg-[#EFECE6]/95 border-[#DCD7CD] opacity-50'
+                        : 'bg-[#EFECE6] border-[#DCD7CD]/80 hover:border-[#DCD7CD]'
                     }`}
                   >
                     {/* Track Name */}
                     <div className="flex items-center gap-2 w-48">
                       <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: track.color }} />
-                      <span className="text-white font-bold truncate">{track.name}</span>
+                      <span className="text-[#18181B] font-bold truncate">{track.name}</span>
                     </div>
 
                     {/* Mute & Solo Toggles */}
@@ -671,9 +671,9 @@ export default function SonificationDashboardHUD({
                       <button
                         onClick={() => handleToggleMute(key)}
                         className={`px-2 py-1 rounded text-[10px] font-bold border ${
-                          track.muted 
-                            ? 'bg-red-500/20 text-red-400 border-red-500/40' 
-                            : 'bg-space-900 text-slate-400 border-slate-700 hover:text-white'
+                          track.muted
+                            ? 'bg-[#EFECE6]/95 text-[#FC3D21] border-[#DCD7CD]/80'
+                            : 'bg-[#FAF9F6] text-[#71717A] border-[#DCD7CD] hover:text-[#18181B]'
                         }`}
                       >
                         MUTE
@@ -682,9 +682,9 @@ export default function SonificationDashboardHUD({
                       <button
                         onClick={() => handleToggleSolo(key)}
                         className={`px-2 py-1 rounded text-[10px] font-bold border ${
-                          track.solo 
-                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' 
-                            : 'bg-space-900 text-slate-400 border-slate-700 hover:text-white'
+                          track.solo
+                            ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
+                            : 'bg-[#FAF9F6] text-[#71717A] border-[#DCD7CD] hover:text-[#18181B]'
                         }`}
                       >
                         SOLO
@@ -700,9 +700,9 @@ export default function SonificationDashboardHUD({
                         value={track.muted ? 0 : track.volume}
                         disabled={track.muted}
                         onChange={(e) => handleVolumeChange(key, Number(e.target.value))}
-                        className="w-full accent-cyan-400 bg-space-900 h-1.5 rounded cursor-pointer"
+                        className="w-full accent-[#0B3D91] bg-[#FAF9F6] h-1.5 rounded cursor-pointer"
                       />
-                      <span className="w-8 text-right text-[10px] text-cyan-400">
+                      <span className="w-8 text-right text-[10px] text-[#D97706]">
                         {track.muted ? '0%' : `${track.volume}%`}
                       </span>
                     </div>
@@ -719,19 +719,19 @@ export default function SonificationDashboardHUD({
 
       {/* JSON DATA HOOK MODAL (DROP IN OPENCV DATA) */}
       {jsonModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-space-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 bg-[#EFECE6]/95 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#FAF9F6] border border-[#DCD7CD] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-[#DCD7CD]">
               <div className="flex items-center gap-2">
-                <FileCode className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-bold text-white font-display">OpenCV JSON Frame-Extraction Hook</h3>
+                <FileCode className="w-5 h-5 text-[#D97706]" />
+                <h3 className="text-base font-bold text-[#18181B] font-display">OpenCV JSON Frame-Extraction Hook</h3>
               </div>
-              <button onClick={() => setJsonModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setJsonModalOpen(false)} className="text-[#71717A] hover:text-[#18181B]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 font-mono">
+            <p className="text-xs text-[#71717A] font-mono">
               Paste custom precomputed Python/OpenCV timeline JSON (e.g., station events, pixel intensities, or temporal coordinates).
             </p>
 
@@ -740,12 +740,12 @@ export default function SonificationDashboardHUD({
               placeholder={`{\n  "station": "iss-lightning",\n  "duration": 30,\n  "events": [\n    { "time": 1.2, "intensity": 0.8 },\n    { "time": 3.5, "intensity": 0.5 }\n  ]\n}`}
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
-              className="w-full p-3 rounded-xl bg-space-950 border border-slate-800 text-xs font-mono text-cyan-300 focus:outline-none focus:border-cyan-400"
+              className="w-full p-3 rounded-xl bg-[#EFECE6] border border-[#DCD7CD] text-xs font-mono text-[#D97706] focus:outline-none focus:border-[#DCD7CD]"
             />
 
             {jsonUploadStatus && (
               <div className={`p-2.5 rounded-lg text-xs font-mono flex items-center gap-2 ${
-                jsonUploadStatus.success ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-red-500/20 text-red-400 border border-red-500/40'
+                jsonUploadStatus.success ? 'bg-[#EFECE6]/95 text-[#D97706] border border-[#DCD7CD]/80' : 'bg-[#EFECE6]/95 text-[#FC3D21] border border-[#DCD7CD]/80'
               }`}>
                 {jsonUploadStatus.success ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
                 <span>{jsonUploadStatus.message}</span>
@@ -755,13 +755,13 @@ export default function SonificationDashboardHUD({
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setJsonModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-space-950 text-slate-400 hover:text-white text-xs font-mono"
+                className="px-4 py-2 rounded-xl bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] text-xs font-mono"
               >
                 Cancel
               </button>
               <button
                 onClick={handleJsonUpload}
-                className="px-5 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-space-950 font-bold text-xs font-mono shadow-glow-cyan"
+                className="px-5 py-2 rounded-xl bg-[#EFECE6] hover:bg-[#EFECE6] text-[#18181B] font-bold text-xs font-mono shadow-glow-cyan"
               >
                 Inject Telemetry
               </button>

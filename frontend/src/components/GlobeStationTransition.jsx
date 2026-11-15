@@ -74,15 +74,15 @@ export default function GlobeStationTransition({
   const getStationIcon = (id) => {
     switch (id) {
       case 'geos-aerosols':
-        return <Wind className="w-4 h-4 text-[#00f0ff]" />;
+        return <Wind className="w-4 h-4 text-[#D97706]" />;
       case 'iss-lightning':
-        return <Zap className="w-4 h-4 text-[#f59e0b]" />;
+        return <Zap className="w-4 h-4 text-[#18181B]" />;
       case 'night-lights':
-        return <Moon className="w-4 h-4 text-[#10b981]" />;
+        return <Moon className="w-4 h-4 text-[#D97706]" />;
       case 'ocean-currents':
-        return <Waves className="w-4 h-4 text-[#38bdf8]" />;
+        return <Waves className="w-4 h-4 text-[#D97706]" />;
       default:
-        return <Activity className="w-4 h-4 text-[#00f0ff]" />;
+        return <Activity className="w-4 h-4 text-[#D97706]" />;
     }
   };
 
@@ -128,10 +128,10 @@ export default function GlobeStationTransition({
         cy,
         radius
       );
-      sphereGrad.addColorStop(0, '#0f2744');
-      sphereGrad.addColorStop(0.5, '#091526');
-      sphereGrad.addColorStop(0.85, '#050c18');
-      sphereGrad.addColorStop(1, '#02050b');
+      sphereGrad.addColorStop(0, '#0B3D91');
+      sphereGrad.addColorStop(0.5, '#0B3D91');
+      sphereGrad.addColorStop(0.85, '#0B3D91');
+      sphereGrad.addColorStop(1, '#0B3D91');
 
       ctx.fillStyle = sphereGrad;
       ctx.beginPath();
@@ -184,8 +184,8 @@ export default function GlobeStationTransition({
           const ly = cy + Math.sin(lAngle) * (radius * 0.5);
           const flash = Math.random() > 0.4;
           if (flash) {
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = '#f59e0b';
+            ctx.fillStyle = '#71717A';
+            ctx.shadowColor = '#D97706';
             ctx.shadowBlur = 15;
             ctx.beginPath();
             ctx.arc(lx, ly, 4, 0, Math.PI * 2);
@@ -209,9 +209,9 @@ export default function GlobeStationTransition({
       ctx.restore();
 
       // 4. Cyan Atmospheric Rim-Glow Outline
-      ctx.strokeStyle = '#00f0ff';
+      ctx.strokeStyle = '#0B3D91';
       ctx.lineWidth = 2.5;
-      ctx.shadowColor = '#00f0ff';
+      ctx.shadowColor = '#0B3D91';
       ctx.shadowBlur = 20;
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
@@ -238,26 +238,26 @@ export default function GlobeStationTransition({
   }, [currentStation.id]);
 
   return (
-    <div className="relative min-h-screen bg-[#030712] overflow-hidden flex flex-col justify-between p-4 sm:p-8 select-none">
+    <div className="relative min-h-screen bg-[#EFECE6] overflow-hidden flex flex-col justify-between p-4 sm:p-8 select-none">
       
       {/* Background Deep-Space Starfield & Giant Watermark Typography */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10 overflow-hidden">
         <div className="text-center">
-          <div className="text-xs sm:text-sm font-mono tracking-[0.35em] text-cyan-400/40 uppercase mb-2">
+          <div className="text-xs sm:text-sm font-mono tracking-[0.35em] text-[#D97706]/40 uppercase mb-2">
             EXPLORE NASA EIC SONIFICATION
           </div>
-          <div className="text-6xl sm:text-9xl md:text-[14rem] font-extrabold font-display tracking-tighter text-white/[0.04] leading-none whitespace-nowrap">
+          <div className="text-6xl sm:text-9xl md:text-[14rem] font-extrabold font-display tracking-tighter text-[#18181B]/[0.04] leading-none whitespace-nowrap">
             EARTH JUKEBOX
           </div>
         </div>
       </div>
 
       {/* Top Header Navigation */}
-      <div className="relative z-10 flex items-center justify-between border-b border-slate-800/80 pb-4">
+      <div className="relative z-10 flex items-center justify-between border-b border-[#DCD7CD]/80 pb-4">
         <div className="flex items-center gap-3">
           <button 
             onClick={onBackToStage1}
-            className="p-2 rounded-xl bg-space-900 border border-slate-800 text-slate-400 hover:text-white transition-colors text-xs font-mono flex items-center gap-1.5"
+            className="p-2 rounded-xl bg-[#FAF9F6] border border-[#DCD7CD] text-[#71717A] hover:text-[#18181B] transition-colors text-xs font-mono flex items-center gap-1.5"
             title="Return to Solar System Overview"
           >
             <span>← Stage 01</span>
@@ -265,14 +265,14 @@ export default function GlobeStationTransition({
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-display font-extrabold text-lg text-white tracking-wider">
+              <span className="font-display font-extrabold text-lg text-[#18181B] tracking-wider">
                 EARTH JUKEBOX
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EFECE6]/95 text-[#D97706] border border-[#DCD7CD]/80 font-bold">
                 STAGE 02 // ORBITAL SELECTOR
               </span>
             </div>
-            <p className="text-xs font-mono text-slate-400 hidden sm:block">
+            <p className="text-xs font-mono text-[#71717A] hidden sm:block">
               Interactive 3D Planetary Station Dispatcher
             </p>
           </div>
@@ -280,17 +280,17 @@ export default function GlobeStationTransition({
 
         {/* Guided Tour Countdown */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-xs font-mono bg-space-900/90 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300">
-            <Clock className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
-            <span>Guided Tour: <strong className="text-cyan-400 font-bold">{countdown}s</strong></span>
+          <div className="flex items-center gap-2 text-xs font-mono bg-[#FAF9F6]/95 border border-[#DCD7CD] px-3 py-1.5 rounded-xl text-[#71717A]">
+            <Clock className="w-3.5 h-3.5 text-[#D97706] animate-spin" style={{ animationDuration: '6s' }} />
+            <span>Guided Tour: <strong className="text-[#D97706] font-bold">{countdown}s</strong></span>
           </div>
 
           <button
             onClick={() => onLaunchHUD(currentStation)}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00f0ff] to-teal-500 hover:from-cyan-300 hover:to-teal-400 text-space-950 font-display font-bold text-xs tracking-wider shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FFFDF9] to-[#EFECE6] hover:from-[#FFFDF9] hover:to-[#EFECE6] text-[#18181B] font-display font-bold text-xs tracking-wider shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all flex items-center gap-2 cursor-pointer"
           >
             <span>LAUNCH SONIFICATION HUD</span>
-            <ArrowRight className="w-4 h-4 text-space-950" />
+            <ArrowRight className="w-4 h-4 text-[#18181B]" />
           </button>
         </div>
       </div>
@@ -306,12 +306,12 @@ export default function GlobeStationTransition({
           />
 
           {/* Active Station Sub-Badge floating below Earth */}
-          <div className="mt-4 px-4 py-2 rounded-2xl bg-space-950/90 backdrop-blur-md border border-slate-800 text-center shadow-xl">
+          <div className="mt-4 px-4 py-2 rounded-2xl bg-[#EFECE6]/95 backdrop-blur-md border border-[#DCD7CD] text-center shadow-xl">
             <div className="flex items-center justify-center gap-2 text-xs font-mono">
-              <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping" />
-              <span className="text-white font-bold">{currentStation.title}</span>
-              <span className="text-slate-500">•</span>
-              <span className="text-cyan-400">{currentStation.metrics.sensorArray}</span>
+              <span className="w-2 h-2 rounded-full bg-[#EFECE6] animate-ping" />
+              <span className="text-[#18181B] font-bold">{currentStation.title}</span>
+              <span className="text-[#71717A]">•</span>
+              <span className="text-[#D97706]">{currentStation.metrics.sensorArray}</span>
             </div>
           </div>
         </div>
@@ -320,11 +320,11 @@ export default function GlobeStationTransition({
         <div className="lg:col-span-5 space-y-4">
           
           <div className="flex items-center justify-between pb-1">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-cyan-400" />
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#71717A] flex items-center gap-2">
+              <Layers className="w-4 h-4 text-[#D97706]" />
               <span>NASA EIC Jukebox Stations</span>
             </span>
-            <span className="text-xs font-mono text-cyan-400">04 Stations Active</span>
+            <span className="text-xs font-mono text-[#D97706]">04 Stations Active</span>
           </div>
 
           {/* Vertical Node Timeline List */}
@@ -337,8 +337,8 @@ export default function GlobeStationTransition({
                   onClick={() => handleSelectStation(idx)}
                   className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between group ${
                     isActive
-                      ? 'bg-space-900/95 border-cyan-400 ring-1 ring-cyan-400/40 shadow-[0_0_25px_rgba(0,240,255,0.2)]'
-                      : 'bg-space-950/80 border-slate-800/80 hover:border-slate-700 hover:bg-space-900/60'
+                      ? 'bg-[#FAF9F6]/95 border-[#DCD7CD] ring-1 ring-[#0B3D91]/80 shadow-[0_0_25px_rgba(0,240,255,0.2)]'
+                      : 'bg-[#EFECE6]/95 border-[#DCD7CD]/80 hover:border-[#DCD7CD] hover:bg-[#FAF9F6]/95'
                   }`}
                 >
                   <div className="flex items-center gap-3.5">
@@ -346,8 +346,8 @@ export default function GlobeStationTransition({
                     <div 
                       className={`w-10 h-10 rounded-xl flex items-center justify-center border font-mono font-bold text-xs transition-colors ${
                         isActive
-                          ? 'bg-cyan-500/20 text-[#00f0ff] border-cyan-400'
-                          : 'bg-space-950 text-slate-400 border-slate-800 group-hover:border-slate-700'
+                          ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]'
+                          : 'bg-[#EFECE6] text-[#71717A] border-[#DCD7CD] group-hover:border-[#DCD7CD]'
                       }`}
                     >
                       {isActive ? getStationIcon(station.id) : `0${station.index}`}
@@ -355,14 +355,14 @@ export default function GlobeStationTransition({
 
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className={`text-sm font-bold font-display ${isActive ? 'text-white' : 'text-slate-300'}`}>
+                        <span className={`text-sm font-bold font-display ${isActive ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
                           {station.shortName}
                         </span>
-                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-space-950 text-slate-400 border border-slate-800">
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#EFECE6] text-[#71717A] border border-[#DCD7CD]">
                           {station.badge.split('//')[1]}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                      <p className="text-xs text-[#71717A] line-clamp-1 mt-0.5">
                         {station.category}
                       </p>
                     </div>
@@ -371,11 +371,11 @@ export default function GlobeStationTransition({
                   <div className="flex items-center gap-2">
                     {isActive && (
                       <span className="flex h-2 w-2 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EFECE6] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EFECE6]"></span>
                       </span>
                     )}
-                    <ArrowRight className={`w-4 h-4 transition-transform ${isActive ? 'text-cyan-400 translate-x-1' : 'text-slate-600 group-hover:text-slate-400'}`} />
+                    <ArrowRight className={`w-4 h-4 transition-transform ${isActive ? 'text-[#D97706] translate-x-1' : 'text-[#71717A] group-hover:text-[#71717A]'}`} />
                   </div>
                 </div>
               );
@@ -383,26 +383,26 @@ export default function GlobeStationTransition({
           </div>
 
           {/* Active Station Sleek Glassmorphic Preview Card */}
-          <div className="p-5 rounded-2xl bg-space-900/90 backdrop-blur-xl border border-slate-700/80 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">
+          <div className="p-5 rounded-2xl bg-[#FAF9F6]/95 backdrop-blur-xl border border-[#DCD7CD]/80 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DCD7CD] pb-2">
+              <span className="text-xs font-mono font-bold text-[#D97706] uppercase tracking-wider">
                 {currentStation.badge}
               </span>
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-xs font-mono text-[#71717A]">
                 Resolution: {currentStation.metrics.globalResolution || currentStation.metrics.spatialResolution || currentStation.metrics.spatialFootprint}
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#71717A] leading-relaxed">
               {currentStation.summary}
             </p>
 
             {/* Acoustic Stems Preview Bar */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] block">
                 Sonification Layer Distribution
               </span>
-              <div className="flex h-2 rounded-full overflow-hidden bg-space-950 border border-slate-800">
+              <div className="flex h-2 rounded-full overflow-hidden bg-[#EFECE6] border border-[#DCD7CD]">
                 {currentStation.defaultLayers.map(layer => (
                   <div
                     key={layer.id}
@@ -416,10 +416,10 @@ export default function GlobeStationTransition({
             {/* Primary Action Button */}
             <button
               onClick={() => onLaunchHUD(currentStation)}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00f0ff] via-teal-400 to-[#14b8a6] hover:from-cyan-300 hover:to-teal-300 text-space-950 font-display font-bold text-xs tracking-wider shadow-[0_0_25px_rgba(0,240,255,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FFFDF9] via-[#FAF9F6] to-[#EFECE6] hover:from-[#FFFDF9] hover:to-[#EFECE6] text-[#18181B] font-display font-bold text-xs tracking-wider shadow-[0_0_25px_rgba(0,240,255,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>LAUNCH SONIFICATION HUD</span>
-              <ArrowRight className="w-4 h-4 text-space-950" />
+              <ArrowRight className="w-4 h-4 text-[#18181B]" />
             </button>
           </div>
 
@@ -428,14 +428,14 @@ export default function GlobeStationTransition({
       </div>
 
       {/* Bottom Status Telemetry Footer */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between text-xs font-mono text-slate-500 border-t border-slate-800/80 pt-3 gap-2">
+      <div className="relative z-10 flex flex-wrap items-center justify-between text-xs font-mono text-[#71717A] border-t border-[#DCD7CD]/80 pt-3 gap-2">
         <div className="flex items-center gap-3">
-          <span className="text-slate-400">PLANETARY GRID: 3D SPHERICAL PROJECTION</span>
+          <span className="text-[#71717A]">PLANETARY GRID: 3D SPHERICAL PROJECTION</span>
           <span>•</span>
-          <span className="text-cyan-400">NASA EIC 2026</span>
+          <span className="text-[#D97706]">NASA EIC 2026</span>
         </div>
 
-        <div className="text-slate-400">
+        <div className="text-[#71717A]">
           SELECT STATION NODE OR CLICK TO ZOOM INTO STAGE 03
         </div>
       </div>

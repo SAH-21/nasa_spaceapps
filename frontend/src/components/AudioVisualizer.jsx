@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function AudioVisualizer({ 
-  isPlaying = false, 
-  color = '#00E5FF', 
+export default function AudioVisualizer({
+  isPlaying = false,
+  color = '#0B3D91',
   height = 64,
-  barsCount = 32 
+  barsCount = 32
 }) {
   const canvasRef = useRef(null);
   const animFrameRef = useRef(null);
@@ -65,20 +65,20 @@ export default function AudioVisualizer({
   }, [isPlaying, color, barsCount]);
 
   return (
-    <div className="w-full rounded-xl bg-space-950 p-3 border border-slate-800/80 shadow-inner">
+    <div className="w-full rounded-xl bg-[#EFECE6] p-3 border border-[#DCD7CD]/80 shadow-inner">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-nasa-cyan animate-ping' : 'bg-slate-600'}`} />
+        <span className="text-[10px] font-mono text-[#71717A] uppercase tracking-wider flex items-center gap-1.5">
+          <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-[#EFECE6] animate-ping' : 'bg-[#EFECE6]'}`} />
           Acoustic Spectrum Telemetry
         </span>
-        <span className="text-[10px] font-mono text-slate-400">
+        <span className="text-[10px] font-mono text-[#71717A]">
           {isPlaying ? '64-BIN FFT ACTIVE' : 'IDLE / STANDBY'}
         </span>
       </div>
-      <canvas 
-        ref={canvasRef} 
-        width={400} 
-        height={height} 
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={height}
         className="w-full h-16 block rounded"
       />
     </div>

@@ -21,19 +21,19 @@ export default function Timeline({
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="rounded-2xl bg-space-900 border border-slate-800 p-5 shadow-xl">
+    <div className="rounded-2xl bg-[#FAF9F6] border border-[#DCD7CD] p-5 shadow-xl">
       
       {/* Timeline Header */}
-      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#DCD7CD]">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-nasa-cyan" />
-          <h4 className="text-sm font-bold text-white font-mono uppercase tracking-wide">
+          <Clock className="w-4 h-4 text-[#D97706]" />
+          <h4 className="text-sm font-bold text-[#18181B] font-mono uppercase tracking-wide">
             Precomputed Python JSON Timeline
           </h4>
         </div>
 
-        <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-nasa-cyan" />
+        <div className="flex items-center gap-2 text-[11px] font-mono text-[#71717A]">
+          <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
           <span>Synchronized to Video Frame Clock</span>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default function Timeline({
       <div 
         ref={containerRef}
         onClick={handleScrub}
-        className="relative h-20 w-full rounded-xl bg-space-950 border border-slate-800 cursor-pointer overflow-hidden group select-none"
+        className="relative h-20 w-full rounded-xl bg-[#EFECE6] border border-[#DCD7CD] cursor-pointer overflow-hidden group select-none"
         role="slider"
         aria-label="Synchronized Timeline Scrub"
         aria-valuemin={0}
@@ -52,7 +52,7 @@ export default function Timeline({
         {/* Background Grid Lines */}
         <div className="absolute inset-0 flex justify-between pointer-events-none opacity-20">
           {[...Array(10)].map((_, i) => (
-            <div key={i} className="h-full border-r border-slate-600 text-[9px] font-mono text-slate-500 pl-1 pt-1">
+            <div key={i} className="h-full border-r border-[#DCD7CD] text-[9px] font-mono text-[#71717A] pl-1 pt-1">
               {i * 10}%
             </div>
           ))}
@@ -72,13 +72,13 @@ export default function Timeline({
                 >
                   <div 
                     className={`w-1 rounded-full transition-colors ${
-                      isPast ? 'bg-nasa-amber shadow-glow-amber' : 'bg-slate-700'
+                      isPast ? 'bg-[#EFECE6] shadow-glow-amber' : 'bg-[#EFECE6]'
                     }`}
                     style={{ height: `${Math.max(20, evt.intensity * 80)}%` }}
                   />
                   <div 
                     className={`w-2 h-2 rounded-full mb-1 ${
-                      isPast ? 'bg-nasa-amber animate-ping' : 'bg-slate-600'
+                      isPast ? 'bg-[#EFECE6] animate-ping' : 'bg-[#EFECE6]'
                     }`} 
                   />
                 </div>
@@ -95,7 +95,7 @@ export default function Timeline({
               return (
                 <div
                   key={idx}
-                  className="flex-1 bg-nasa-cyan/40 hover:bg-nasa-cyan"
+                  className="flex-1 bg-[#EFECE6]/95 hover:bg-[#EFECE6]"
                   style={{ height: `${heightPercent}%` }}
                 />
               );
@@ -105,33 +105,33 @@ export default function Timeline({
 
         {/* Current Playhead Scrubber */}
         <div 
-          className="absolute top-0 bottom-0 w-0.5 bg-white z-30 pointer-events-none shadow-[0_0_12px_#fff]"
+          className="absolute top-0 bottom-0 w-0.5 bg-[#EFECE6] z-30 pointer-events-none shadow-[0_0_12px_#fff]"
           style={{ left: `${Math.min(100, progressPercent)}%` }}
         >
-          <div className="absolute -top-1 -translate-x-1/2 w-3 h-3 bg-nasa-cyan rounded-full border-2 border-space-950 shadow-glow-cyan" />
-          <div className="absolute -bottom-1 -translate-x-1/2 w-3 h-3 bg-nasa-cyan rounded-full border-2 border-space-950 shadow-glow-cyan" />
+          <div className="absolute -top-1 -translate-x-1/2 w-3 h-3 bg-[#EFECE6] rounded-full border-2 border-[#DCD7CD] shadow-glow-cyan" />
+          <div className="absolute -bottom-1 -translate-x-1/2 w-3 h-3 bg-[#EFECE6] rounded-full border-2 border-[#DCD7CD] shadow-glow-cyan" />
         </div>
 
         {/* Played Time Shade */}
         <div 
-          className="absolute top-0 bottom-0 left-0 bg-nasa-blue/20 pointer-events-none border-r border-nasa-cyan/40"
+          className="absolute top-0 bottom-0 left-0 bg-[#EFECE6]/95 pointer-events-none border-r border-[#DCD7CD]/80"
           style={{ width: `${Math.min(100, progressPercent)}%` }}
         />
       </div>
 
       {/* Timeline Footer Legend */}
-      <div className="mt-3 flex flex-wrap items-center justify-between text-xs font-mono text-slate-400 gap-2">
+      <div className="mt-3 flex flex-wrap items-center justify-between text-xs font-mono text-[#71717A] gap-2">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-nasa-cyan" />
+            <span className="w-2 h-2 rounded-full bg-[#EFECE6]" />
             <span>Time Scrub</span>
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-[#71717A]">|</span>
           <span>Click anywhere to jump video & audio sync</span>
         </div>
 
-        <div className="text-slate-400 text-[11px]">
-          Duration: <span className="text-white font-bold">{duration.toFixed(1)}s</span>
+        <div className="text-[#71717A] text-[11px]">
+          Duration: <span className="text-[#18181B] font-bold">{duration.toFixed(1)}s</span>
         </div>
       </div>
 

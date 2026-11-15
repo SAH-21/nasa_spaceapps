@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import GlobeLocationPicker from './GlobeLocationPicker';
 import { Activity, Cloud, Loader2, Pause, Play, RefreshCw, Wind } from 'lucide-react';
 
 const API_BASE_URL = (
@@ -6,9 +7,9 @@ const API_BASE_URL = (
 ).replace(/\/+$/, '');
 
 const FIELDS = [
-  { id: 'temperature_c', name: 'Temperature', unit: '°C', color: '#76e1f0', type: 'sine' },
-  { id: 'relative_humidity_pct', name: 'Humidity', unit: '%', color: '#b4a7ff', type: 'triangle' },
-  { id: 'wind_speed_mps', name: 'Wind speed', unit: 'm/s', color: '#6ee7b7', type: 'sine' }
+  { id: 'temperature_c', name: 'Temperature', unit: '°C', color: '#0B3D91', type: 'sine' },
+  { id: 'relative_humidity_pct', name: 'Humidity', unit: '%', color: '#0B3D91', type: 'triangle' },
+  { id: 'wind_speed_mps', name: 'Wind speed', unit: 'm/s', color: '#71717A', type: 'sine' }
 ];
 
 function formatNumber(value, digits = 2) {
@@ -154,80 +155,81 @@ export default function NASAClimateLab() {
   const samples = data?.data?.samples || [];
 
   return (
-    <section className="rounded-2xl border border-[#325666] bg-gradient-to-br from-[#0e293a] to-[#0b1728] p-5 text-white sm:p-7" aria-label="NASA multi-layer climate lab">
+    <section className="rounded-2xl border border-[#DCD7CD] bg-gradient-to-br from-[#FFFDF9] to-[#EFECE6] p-5 text-[#18181B] sm:p-7" aria-label="NASA multi-layer climate lab">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-teal-300">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#D97706]">
             <Activity className="h-4 w-4" /> NASA POWER · MULTI-LAYER SCIENCE
           </div>
           <h2 className="mt-2 text-xl font-bold sm:text-2xl">Hear Temperature, Humidity & Wind Together</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#71717A]">
             Three genuine daily NASA POWER variables mapped to three generated sound layers. Missing data stays silent.
           </p>
         </div>
-        <div className="flex gap-2 text-teal-300"><Cloud className="h-6 w-6" /><Wind className="h-6 w-6" /></div>
+        <div className="flex gap-2 text-[#D97706]"><Cloud className="h-6 w-6" /><Wind className="h-6 w-6" /></div>
       </div>
-      <form onSubmit={loadData} className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-        {[
-          ['Latitude', latitude, setLatitude, -90, 90],
-          ['Longitude', longitude, setLongitude, -180, 180]
-        ].map(([label, value, update, min, max]) => (
-          <label key={label} className="text-xs text-slate-300">{label}
-            <input required aria-label={`Climate ${label}`} type="number" step="any" min={min} max={max} value={value} onChange={e => update(e.target.value)} className="mt-1 block w-full rounded-lg border border-slate-600 bg-[#081727] px-3 py-2.5 text-white" />
-          </label>
-        ))}
+      <GlobeLocationPicker
+        latitude={latitude}
+        longitude={longitude}
+        onChange={({ latitude: nextLatitude, longitude: nextLongitude }) => {
+          setLatitude(nextLatitude);
+          setLongitude(nextLongitude);
+        }}
+      />
+
+      <form onSubmit={loadData} className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {[
           ['Start (UTC)', start, setStart],
           ['End (UTC)', end, setEnd]
         ].map(([label, value, update]) => (
-          <label key={label} className="text-xs text-slate-300">{label}
-            <input required aria-label={`Climate ${label}`} type="date" value={value} onChange={e => update(e.target.value)} className="mt-1 block w-full rounded-lg border border-slate-600 bg-[#081727] px-3 py-2.5 text-white" />
+          <label key={label} className="text-xs text-[#71717A]">{label}
+            <input required aria-label={`Climate ${label}`} type="date" value={value} onChange={e => update(e.target.value)} className="mt-1 block w-full rounded-lg border border-[#DCD7CD] bg-[#EFECE6] px-3 py-2.5 text-[#18181B]" />
           </label>
         ))}
-        <button disabled={loading} type="submit" className="flex min-h-11 items-center justify-center gap-2 self-end rounded-lg bg-teal-300 px-4 py-2.5 text-sm font-bold text-[#061927] disabled:opacity-60">
+        <button disabled={loading} type="submit" className="flex min-h-11 items-center justify-center gap-2 self-end rounded-lg bg-[#EFECE6] px-4 py-2.5 text-sm font-bold text-[#D97706] disabled:opacity-60">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
           {loading ? 'Loading...' : 'Load 3 Datasets'}
         </button>
       </form>
-      {error && <p role="alert" className="mt-4 rounded-lg border border-red-400/40 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
+      {error && <p role="alert" className="mt-4 rounded-lg border border-[#DCD7CD]/80 bg-[#EFECE6]/95 p-3 text-sm text-[#FC3D21]">{error}</p>}
       {data && (
         <div className="mt-6 space-y-5">
           <div className="grid gap-3 md:grid-cols-3">
             {FIELDS.map(field => (
-              <div key={field.id} className="rounded-xl border border-[#345668] bg-[#091d2b] p-4">
+              <div key={field.id} className="rounded-xl border border-[#DCD7CD] bg-[#EFECE6] p-4">
                 <div className="mb-2 flex items-center gap-2 text-sm font-semibold"><span className="h-2.5 w-2.5 rounded-full" style={{ background: field.color }} />{field.name}</div>
-                <p className="text-xs text-slate-400">{data.data.available_by_parameter[field.id === 'temperature_c' ? 'T2M' : field.id === 'relative_humidity_pct' ? 'RH2M' : 'WS2M']} available daily readings</p>
-                <p className="mt-1 text-xs text-slate-400">Unit: {field.unit}</p>
+                <p className="text-xs text-[#71717A]">{data.data.available_by_parameter[field.id === 'temperature_c' ? 'T2M' : field.id === 'relative_humidity_pct' ? 'RH2M' : 'WS2M']} available daily readings</p>
+                <p className="mt-1 text-xs text-[#71717A]">Unit: {field.unit}</p>
               </div>
             ))}
           </div>
-          <div className="rounded-xl border border-[#345668] bg-[#081725] p-4">
+          <div className="rounded-xl border border-[#DCD7CD] bg-[#EFECE6] p-4">
             <h3 className="mb-2 text-sm font-semibold">Normalized sound mapping (0–1 per variable)</h3>
             <svg role="img" aria-label="Daily normalized temperature humidity and wind series" viewBox="0 0 800 165" className="h-40 w-full" preserveAspectRatio="none">
-              <path d="M0 151 H800 M0 20 H800" stroke="#345668" strokeWidth="1" strokeDasharray="5 7" />
+              <path d="M0 151 H800 M0 20 H800" stroke="#0B3D91" strokeWidth="1" strokeDasharray="5 7" />
               {FIELDS.flatMap(field => linePoints(samples, field.id).map((points, index) => (
                 <polyline key={`${field.id}-${index}`} fill="none" stroke={field.color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={points} />
               )))}
             </svg>
-            <p className="mt-2 text-xs text-slate-400">{data.period.start} to {data.period.end} · {data.data.complete_days}/{data.data.sample_count} complete days</p>
+            <p className="mt-2 text-xs text-[#71717A]">{data.period.start} to {data.period.end} · {data.data.complete_days}/{data.data.sample_count} complete days</p>
           </div>
-          <div className="overflow-x-auto rounded-xl border border-[#345668]">
+          <div className="overflow-x-auto rounded-xl border border-[#DCD7CD]">
             <table className="w-full min-w-[520px] text-left text-xs">
-              <thead className="bg-[#132a3a] text-slate-300"><tr><th className="p-3">Date</th>{FIELDS.map(field => <th key={field.id} className="p-3">{field.name} ({field.unit})</th>)}</tr></thead>
-              <tbody>{samples.map(sample => <tr key={sample.date} className="border-t border-[#284456]"><td className="p-3">{sample.date}</td>{FIELDS.map(field => <td key={field.id} className="p-3">{formatNumber(sample.measurements[field.id])}</td>)}</tr>)}</tbody>
+              <thead className="bg-[#EFECE6] text-[#71717A]"><tr><th className="p-3">Date</th>{FIELDS.map(field => <th key={field.id} className="p-3">{field.name} ({field.unit})</th>)}</tr></thead>
+              <tbody>{samples.map(sample => <tr key={sample.date} className="border-t border-[#DCD7CD]"><td className="p-3">{sample.date}</td>{FIELDS.map(field => <td key={field.id} className="p-3">{formatNumber(sample.measurements[field.id])}</td>)}</tr>)}</tbody>
             </table>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="max-w-2xl text-xs leading-5 text-slate-400">NASA provides modeled meteorological values, not recorded sounds. Earthsonic creates the three pitch layers and clamps values outside each artistic range. Dates with missing measurements omit that layer.</p>
-            <button type="button" onClick={togglePlayback} className="flex items-center gap-2 rounded-xl bg-teal-300 px-5 py-3 text-sm font-bold text-[#061927]">
+            <p className="max-w-2xl text-xs leading-5 text-[#71717A]">NASA provides modeled meteorological values, not recorded sounds. Earthsonic creates the three pitch layers and clamps values outside each artistic range. Dates with missing measurements omit that layer.</p>
+            <button type="button" onClick={togglePlayback} className="flex items-center gap-2 rounded-xl bg-[#EFECE6] px-5 py-3 text-sm font-bold text-[#D97706]">
               {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               {playing ? 'Stop Climate Audio' : 'Play Climate Symphony'}
             </button>
           </div>
-          <a className="inline-flex text-xs font-semibold text-teal-300 underline underline-offset-4" href={data.source.source_url} target="_blank" rel="noreferrer">View original NASA POWER source</a>
+          <a className="inline-flex text-xs font-semibold text-[#D97706] underline underline-offset-4" href={data.source.source_url} target="_blank" rel="noreferrer">View original NASA POWER source</a>
         </div>
       )}
-      {!data && !error && <p className="mt-5 text-xs text-slate-400">Default coordinates: Nagpur, India. Select up to 31 days; use historical dates for reproducibility.</p>}
+      {!data && !error && <p className="mt-5 text-xs text-[#71717A]">Default coordinates: Nagpur, India. Select up to 31 days; use historical dates for reproducibility.</p>}
     </section>
   );
 }

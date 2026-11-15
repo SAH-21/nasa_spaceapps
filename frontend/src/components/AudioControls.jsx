@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Volume2, 
-  VolumeX, 
-  Repeat, 
-  Sliders, 
-  Radio 
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  Repeat,
+  Sliders,
+  Radio
 } from 'lucide-react';
 
 export default function AudioControls({
@@ -30,13 +30,13 @@ export default function AudioControls({
   };
 
   return (
-    <div className="rounded-2xl bg-space-900 border border-slate-800 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-xl">
-      
+    <div className="rounded-2xl bg-[#FAF9F6] border border-[#DCD7CD] p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+
       {/* Left: Playback Controls */}
       <div className="flex items-center gap-3">
         <button
           onClick={onPlayPause}
-          className="w-12 h-12 rounded-xl bg-gradient-to-r from-nasa-cyan to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-space-950 flex items-center justify-center font-bold shadow-glow-cyan/50 transition-transform active:scale-95"
+          className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#FFFDF9] to-[#EFECE6] hover:from-[#FFFDF9] hover:to-[#EFECE6] text-[#18181B] flex items-center justify-center font-bold shadow-glow-cyan/50 transition-transform active:scale-95"
           aria-label={isPlaying ? 'Pause Audio and Video' : 'Play Audio and Video'}
         >
           {isPlaying ? (
@@ -48,7 +48,7 @@ export default function AudioControls({
 
         <button
           onClick={onReset}
-          className="p-3 rounded-xl bg-space-850 hover:bg-space-800 text-slate-300 hover:text-white border border-slate-700/80 transition-colors"
+          className="p-3 rounded-xl bg-[#EFECE6] hover:bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] border border-[#DCD7CD]/80 transition-colors"
           title="Restart Playback from Beginning"
           aria-label="Restart Playback"
         >
@@ -58,9 +58,9 @@ export default function AudioControls({
         <button
           onClick={onToggleLoop}
           className={`p-3 rounded-xl border transition-all ${
-            isLooping 
-              ? 'bg-nasa-cyan/15 text-nasa-cyan border-nasa-cyan/50' 
-              : 'bg-space-850 text-slate-400 border-slate-700/80 hover:text-slate-200'
+            isLooping
+              ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/50'
+              : 'bg-[#EFECE6] text-[#71717A] border-[#DCD7CD]/80 hover:text-[#18181B]'
           }`}
           title="Toggle Seamless Loop"
           aria-label="Toggle Loop"
@@ -70,15 +70,15 @@ export default function AudioControls({
       </div>
 
       {/* Middle: Digital Time Display */}
-      <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-space-950 border border-slate-800 font-mono">
+      <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#EFECE6] border border-[#DCD7CD] font-mono">
         <div className="flex flex-col">
-          <span className="text-[9px] uppercase tracking-wider text-slate-500 font-semibold">SYNCHRONIZED TELEMETRY TIME</span>
+          <span className="text-[9px] uppercase tracking-wider text-[#71717A] font-semibold">SYNCHRONIZED TELEMETRY TIME</span>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-xl font-bold text-nasa-cyan tracking-wider">
+            <span className="text-xl font-bold text-[#D97706] tracking-wider">
               {formatTime(currentTime)}
             </span>
-            <span className="text-xs text-slate-500">/</span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-[#71717A]">/</span>
+            <span className="text-xs text-[#71717A]">
               {formatTime(duration)}
             </span>
           </div>
@@ -89,20 +89,20 @@ export default function AudioControls({
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMute}
-          className="p-2.5 rounded-xl bg-space-850 hover:bg-space-800 text-slate-300 hover:text-white border border-slate-700/80 transition-colors"
+          className="p-2.5 rounded-xl bg-[#EFECE6] hover:bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] border border-[#DCD7CD]/80 transition-colors"
           aria-label={isMuted ? 'Unmute Master' : 'Mute Master'}
         >
           {isMuted || masterVolume === 0 ? (
-            <VolumeX className="w-5 h-5 text-nasa-red" />
+            <VolumeX className="w-5 h-5 text-[#FC3D21]" />
           ) : (
-            <Volume2 className="w-5 h-5 text-nasa-cyan" />
+            <Volume2 className="w-5 h-5 text-[#D97706]" />
           )}
         </button>
 
         <div className="flex flex-col gap-1 w-28 sm:w-36">
-          <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
+          <div className="flex justify-between items-center text-[10px] font-mono text-[#71717A]">
             <span>MASTER GAIN</span>
-            <span className="text-slate-200 font-bold">{isMuted ? '0%' : `${masterVolume}%`}</span>
+            <span className="text-[#18181B] font-bold">{isMuted ? '0%' : `${masterVolume}%`}</span>
           </div>
           <input
             type="range"
@@ -110,7 +110,7 @@ export default function AudioControls({
             max="100"
             value={isMuted ? 0 : masterVolume}
             onChange={(e) => onMasterVolumeChange(Number(e.target.value))}
-            className="w-full accent-nasa-cyan bg-space-950 h-1.5 rounded-lg cursor-pointer"
+            className="w-full accent-[#0B3D91] bg-[#EFECE6] h-1.5 rounded-lg cursor-pointer"
             aria-label="Master Volume Slider"
           />
         </div>

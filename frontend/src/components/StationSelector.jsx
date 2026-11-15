@@ -33,28 +33,28 @@ export default function StationSelector({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-earth-cyan mb-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#D97706] mb-2">
               <Radio className="w-4 h-4" />
               <span>STATION DISPATCHER // 10 SVS SOURCES</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#18181B] font-display tracking-tight">
               Select Earth Observation Station
             </h2>
-            <p className="text-sm text-slate-300 font-sans mt-1 max-w-2xl">
+            <p className="text-sm text-[#71717A] font-sans mt-1 max-w-2xl">
               Audition and load any of the 10 official NASA SVS visual and video models into the Earth Information Jukebox. Each station features specialized acoustic voices and multi-track stems.
             </p>
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-space-850 p-1.5 rounded-2xl border border-space-700/80">
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#EFECE6] p-1.5 rounded-2xl border border-[#DCD7CD]/80">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setFilterCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
                   filterCategory === cat.id
-                    ? 'bg-earth-cyan text-space-950 font-bold shadow-glow-cyan'
-                    : 'text-slate-300 hover:text-white hover:bg-space-800'
+                    ? 'bg-[#EFECE6] text-[#18181B] font-bold shadow-glow-cyan'
+                    : 'text-[#71717A] hover:text-[#18181B] hover:bg-[#EFECE6]'
                 }`}
               >
                 {cat.label}

@@ -1,7 +1,7 @@
 export const SCIENCE_LAYERS = [
-  { id: 'temperature_c', label: 'Temperature', unit: '°C', type: 'sine', color: '#67e8f9' },
-  { id: 'relative_humidity_pct', label: 'Humidity', unit: '%', type: 'triangle', color: '#c4b5fd' },
-  { id: 'wind_speed_mps', label: 'Wind speed', unit: 'm/s', type: 'sine', color: '#6ee7b7' }
+  { id: 'temperature_c', label: 'Temperature', unit: '°C', type: 'sine', color: '#0B3D91' },
+  { id: 'relative_humidity_pct', label: 'Humidity', unit: '%', type: 'triangle', color: '#D97706' },
+  { id: 'wind_speed_mps', label: 'Wind speed', unit: 'm/s', type: 'sine', color: '#FC3D21' }
 ];
 
 export const SCIENCE_DAY_SECONDS = 0.75;

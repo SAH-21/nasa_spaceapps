@@ -188,27 +188,27 @@ export default function MixStudio({
   return (
     <section
       id={mode === 'dashboard' ? 'saved-mixes' : undefined}
-      className="rounded-2xl border border-[#294057] bg-[#111F32] p-5 text-white shadow-xl sm:p-6"
+      className="rounded-2xl border border-[#DCD7CD] bg-[#EFECE6] p-5 text-[#18181B] shadow-xl sm:p-6"
       aria-label="Saved audio mixes"
     >
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <AudioLines className="h-5 w-5 text-[#75E4EF]" />
+            <AudioLines className="h-5 w-5 text-[#D97706]" />
             {mode === 'jukebox' ? 'Save & Load Audio Mixes' : 'My Saved Audio Mixes'}
           </h2>
-          <p className="mt-1 text-sm text-[#ADC0D4]">
+          <p className="mt-1 text-sm text-[#18181B]">
             Store your volume, mute, loop, and track settings as presets.
           </p>
         </div>
-        <span className="rounded-full border border-[#59D8EF]/30 bg-[#59D8EF]/10 px-3 py-1.5 text-xs font-semibold text-[#85E9F0]">
+        <span className="rounded-full border border-[#DCD7CD]/70 bg-[#EFECE6]/95 px-3 py-1.5 text-xs font-semibold text-[#D97706]">
           {loading ? 'Loading...' : `${mixes.length} saved`}
         </span>
       </div>
 
       {mode === 'jukebox' && user && (
-        <form onSubmit={handleSave} className="mb-5 flex flex-wrap gap-3 rounded-xl border border-[#30465C] bg-[#0B1729] p-4">
-          <label className="min-w-[190px] flex-1 text-xs font-semibold text-[#ADC0D4]">
+        <form onSubmit={handleSave} className="mb-5 flex flex-wrap gap-3 rounded-xl border border-[#DCD7CD] bg-[#EFECE6] p-4">
+          <label className="min-w-[190px] flex-1 text-xs font-semibold text-[#18181B]">
             Mix name
             <input
               type="text"
@@ -216,13 +216,13 @@ export default function MixStudio({
               maxLength={80}
               onChange={(event) => setMixName(event.target.value)}
               placeholder={`${station?.shortName || 'Earthsonic'} Mix`}
-              className="mt-2 w-full rounded-lg border border-[#39546A] bg-[#142338] px-3 py-3 text-sm text-white outline-none focus:border-[#75E4EF]"
+              className="mt-2 w-full rounded-lg border border-[#DCD7CD] bg-[#EFECE6] px-3 py-3 text-sm text-[#18181B] outline-none focus:border-[#DCD7CD]"
             />
           </label>
           <button
             type="submit"
             disabled={busy || loading || !csrfToken || !station}
-            className="inline-flex self-end items-center gap-2 rounded-lg bg-[#75E4EF] px-5 py-3 text-sm font-bold text-[#071521] transition hover:brightness-110 disabled:opacity-60"
+            className="inline-flex self-end items-center gap-2 rounded-lg bg-[#EFECE6] px-5 py-3 text-sm font-bold text-[#D97706] transition hover:brightness-110 disabled:opacity-60"
           >
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Save Current Mix
@@ -231,37 +231,37 @@ export default function MixStudio({
       )}
 
       {!user ? (
-        <p className="rounded-xl border border-dashed border-[#39546A] bg-[#0B1729] p-5 text-sm text-[#ADC0D4]">
+        <p className="rounded-xl border border-dashed border-[#DCD7CD] bg-[#EFECE6] p-5 text-sm text-[#18181B]">
           Sign in to save mixes to your account. You can still use the Jukebox as a guest.
         </p>
       ) : (
         <>
           {error && (
-            <p role="alert" className="mb-4 rounded-lg border border-rose-400/40 bg-rose-400/10 p-3 text-sm text-rose-200">
+            <p role="alert" className="mb-4 rounded-lg border border-[#DCD7CD]/80 bg-[#EFECE6]/95 p-3 text-sm text-[#FC3D21]">
               {error}
             </p>
           )}
           {success && (
-            <p role="status" className="mb-4 flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-400/10 p-3 text-sm text-emerald-200">
+            <p role="status" className="mb-4 flex items-center gap-2 rounded-lg border border-[#DCD7CD]/70 bg-[#EFECE6]/95 p-3 text-sm text-[#D97706]">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
               {success}
             </p>
           )}
           {loading ? (
-            <p role="status" className="flex items-center gap-2 text-sm text-[#ADC0D4]">
+            <p role="status" className="flex items-center gap-2 text-sm text-[#18181B]">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading mixes...
             </p>
           ) : mixes.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-[#39546A] bg-[#0B1729] p-5 text-sm text-[#ADC0D4]">
+            <p className="rounded-xl border border-dashed border-[#DCD7CD] bg-[#EFECE6] p-5 text-sm text-[#18181B]">
               No saved mixes yet. Open the Jukebox, adjust the controls, and save your first mix.
             </p>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
               {mixes.map((mix) => (
-                <div key={mix.id} className="rounded-xl border border-[#30465C] bg-[#0B1729] p-4">
+                <div key={mix.id} className="rounded-xl border border-[#DCD7CD] bg-[#EFECE6] p-4">
                   <div className="mb-4 min-w-0">
-                    <p className="truncate text-sm font-semibold text-white" title={mix.name}>{mix.name}</p>
-                    <p className="mt-1 text-xs text-[#91AAC3]">
+                    <p className="truncate text-sm font-semibold text-[#18181B]" title={mix.name}>{mix.name}</p>
+                    <p className="mt-1 text-xs text-[#18181B]">
                       {stationNames[mix.station_id] || mix.station_id} · Master {mix.settings.master_volume}%
                     </p>
                   </div>
@@ -270,7 +270,7 @@ export default function MixStudio({
                       type="button"
                       onClick={() => handleLoad(mix)}
                       disabled={busy || busyId !== null}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#75E4EF] px-3 py-2 text-xs font-bold text-[#071521] disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#EFECE6] px-3 py-2 text-xs font-bold text-[#D97706] disabled:opacity-50"
                     >
                       {busyId === mix.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FolderOpen className="h-3.5 w-3.5" />}
                       Load
@@ -279,7 +279,7 @@ export default function MixStudio({
                       type="button"
                       onClick={() => handleRename(mix)}
                       disabled={busy || busyId !== null}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#39546A] px-3 py-2 text-xs text-[#ADC0D4] hover:text-white disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#DCD7CD] px-3 py-2 text-xs text-[#18181B] hover:text-[#18181B] disabled:opacity-50"
                     >
                       <Pencil className="h-3.5 w-3.5" /> Rename
                     </button>
@@ -287,7 +287,7 @@ export default function MixStudio({
                       type="button"
                       onClick={() => handleDelete(mix)}
                       disabled={busy || busyId !== null}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 px-3 py-2 text-xs text-rose-300 hover:bg-rose-400/10 disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#DCD7CD]/70 px-3 py-2 text-xs text-[#FC3D21] hover:bg-[#EFECE6]/95 disabled:opacity-50"
                     >
                       <Trash2 className="h-3.5 w-3.5" /> Delete
                     </button>

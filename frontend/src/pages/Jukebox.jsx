@@ -9,13 +9,13 @@ import ScientificJukebox from '../components/ScientificJukebox';
 import { STATIONS } from '../data/stations';
 import { dataService } from '../services/dataService';
 import { audioEngine } from '../services/audioEngine';
-import { 
-  Radio, 
-  Info, 
-  Sliders, 
-  Layers, 
-  ArrowLeft, 
-  CheckCircle2, 
+import {
+  Radio,
+  Info,
+  Sliders,
+  Layers,
+  ArrowLeft,
+  CheckCircle2,
   ExternalLink,
   Volume2,
   VolumeX,
@@ -26,9 +26,9 @@ import {
   Sparkles
 } from 'lucide-react';
 
-export default function Jukebox({ 
-  selectedStation, 
-  onSelectStation, 
+export default function Jukebox({
+  selectedStation,
+  onSelectStation,
   onBackToHome,
   user = null,
   csrfToken = '',
@@ -234,41 +234,41 @@ export default function Jukebox({
   const currentB = earthPulseData?.brightness?.[currentSampleIdx] || 0.5;
 
   return (
-    <div className="min-h-screen py-8 bg-space-900">
+    <div className="editorial-jukebox min-h-screen py-8 bg-[#FAF9F6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
+
         {/* Top Breadcrumb & Station Switcher Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-space-850 border border-space-700 shadow-xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-[#EFECE6] border border-[#DCD7CD] shadow-xl">
           <div className="flex items-center gap-3">
             <button
               onClick={onBackToHome}
-              className="p-2.5 rounded-xl bg-space-900 hover:bg-space-800 text-slate-300 hover:text-white border border-space-700 transition-colors flex items-center gap-1.5 text-xs font-mono font-semibold"
+              className="p-2.5 rounded-xl bg-[#FAF9F6] hover:bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] border border-[#DCD7CD] transition-colors flex items-center gap-1.5 text-xs font-mono font-semibold"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Explore Overview</span>
             </button>
 
-            <div className="h-6 w-[1px] bg-space-700 hidden sm:block" />
+            <div className="h-6 w-[1px] bg-[#EFECE6] hidden sm:block" />
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-earth-cyan uppercase">
+                <span className="text-xs font-mono font-bold text-[#D97706] uppercase">
                   {selectedStation.svsId}:
                 </span>
-                <span className="text-sm font-bold text-white font-display">
+                <span className="text-sm font-bold text-[#18181B] font-display">
                   {selectedStation.title}
                 </span>
                 <a
                   href={selectedStation.svsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1 rounded bg-space-900 text-slate-400 hover:text-earth-cyan border border-space-700 transition-colors"
+                  className="p-1 rounded bg-[#FAF9F6] text-[#71717A] hover:text-[#D97706] border border-[#DCD7CD] transition-colors"
                   title="View Official SVS Page"
                 >
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
-              <p className="text-[11px] font-sans text-earth-teal font-medium">
+              <p className="text-[11px] font-sans text-[#D97706] font-medium">
                 {selectedStation.voiceName} • {selectedStation.displayMode}
               </p>
             </div>
@@ -283,9 +283,9 @@ export default function Jukebox({
                 audioEngine.toggleSpeech(next);
               }}
               className={`px-3 py-1.5 rounded-xl border text-xs font-mono flex items-center gap-1.5 transition-all ${
-                speechActive 
-                  ? 'bg-earth-emerald/20 text-earth-emerald border-earth-emerald/40' 
-                  : 'bg-space-900 text-slate-400 border-space-700'
+                speechActive
+                  ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
+                  : 'bg-[#FAF9F6] text-[#71717A] border-[#DCD7CD]'
               }`}
               title="NASA Spoken Voiceover Guide for Telemetry & Alerts"
             >
@@ -305,11 +305,11 @@ export default function Jukebox({
                 onClick={() => onSelectStation(stn)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-mono flex items-center gap-2 transition-all whitespace-nowrap border ${
                   isActive
-                    ? 'bg-earth-cyan text-space-950 font-bold border-earth-cyan shadow-glow-cyan'
-                    : 'bg-space-850 text-slate-300 hover:text-white hover:bg-space-800 border-space-700'
+                    ? 'bg-[#EFECE6] text-[#18181B] font-bold border-[#DCD7CD] shadow-glow-cyan'
+                    : 'bg-[#EFECE6] text-[#71717A] hover:text-[#18181B] hover:bg-[#EFECE6] border-[#DCD7CD]'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-space-950' : 'bg-earth-cyan'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#EFECE6]' : 'bg-[#EFECE6]'}`} />
                 <span>{stn.svsId}: {stn.shortName}</span>
               </button>
             );
@@ -317,30 +317,30 @@ export default function Jukebox({
         </div>
 
         {/* Live EarthPulse FastAPI Backend Connection Banner */}
-        <div className="p-4 rounded-2xl bg-space-850/90 border border-space-700 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 rounded-2xl bg-[#EFECE6]/95 border border-[#DCD7CD] flex flex-wrap items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3">
             <div className={`p-2.5 rounded-xl border flex items-center justify-center ${
-              backendStatus === 'online' 
-                ? 'bg-earth-emerald/20 text-earth-emerald border-earth-emerald/40' 
-                : 'bg-earth-amber/20 text-earth-amber border-earth-amber/40'
+              backendStatus === 'online'
+                ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
+                : 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
             }`}>
               <Cpu className="w-5 h-5" />
             </div>
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                <span className="text-xs font-mono font-bold text-[#18181B] uppercase tracking-wider">
                   EarthPulse Backend:
                 </span>
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border ${
                   backendStatus === 'online'
-                    ? 'bg-earth-emerald/20 text-earth-emerald border-earth-emerald/40'
-                    : 'bg-earth-amber/20 text-earth-amber border-earth-amber/40'
+                    ? 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
+                    : 'bg-[#EFECE6]/95 text-[#D97706] border-[#DCD7CD]/80'
                 }`}>
                   {backendStatus === 'online' ? 'GET /api/sonification ONLINE' : 'STANDBY (Calibrated 100-pt Sonification)'}
                 </span>
               </div>
-              <p className="text-[11px] font-mono text-slate-400 mt-0.5">
+              <p className="text-[11px] font-mono text-[#71717A] mt-0.5">
                 FastAPI Pillow Image Scanner • 100 Normalized Brightness & Frequencies (180 – 760 Hz)
               </p>
             </div>
@@ -348,23 +348,23 @@ export default function Jukebox({
 
           <div className="flex items-center gap-3">
             {/* Live Readout Values */}
-            <div className="hidden sm:flex items-center gap-3 text-xs font-mono bg-space-900 px-3 py-1.5 rounded-xl border border-space-700">
-              <span className="text-slate-400">
-                PT #{currentSampleIdx + 1}: <strong className="text-earth-cyan font-bold">{currentHz} Hz</strong>
+            <div className="hidden sm:flex items-center gap-3 text-xs font-mono bg-[#FAF9F6] px-3 py-1.5 rounded-xl border border-[#DCD7CD]">
+              <span className="text-[#71717A]">
+                PT #{currentSampleIdx + 1}: <strong className="text-[#D97706] font-bold">{currentHz} Hz</strong>
               </span>
-              <span className="text-slate-600">|</span>
-              <span className="text-slate-400">
-                BRIGHTNESS: <strong className="text-earth-amber font-bold">{currentB}</strong>
+              <span className="text-[#71717A]">|</span>
+              <span className="text-[#71717A]">
+                BRIGHTNESS: <strong className="text-[#D97706] font-bold">{currentB}</strong>
               </span>
             </div>
 
             <button
               onClick={handleSyncBackend}
               disabled={isSyncingBackend}
-              className="px-3.5 py-2 rounded-xl bg-space-900 hover:bg-space-800 text-slate-200 border border-space-700 hover:border-earth-cyan text-xs font-mono flex items-center gap-2 transition-all cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-[#FAF9F6] hover:bg-[#EFECE6] text-[#18181B] border border-[#DCD7CD] hover:border-[#DCD7CD] text-xs font-mono flex items-center gap-2 transition-all cursor-pointer"
               title="Poll GET /api/health and /api/sonification"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-earth-cyan ${isSyncingBackend ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 text-[#D97706] ${isSyncingBackend ? 'animate-spin' : ''}`} />
               <span>{isSyncingBackend ? 'Polling...' : 'Sync Backend'}</span>
             </button>
           </div>
@@ -400,10 +400,10 @@ export default function Jukebox({
 
         {/* Workstation Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column: NASA Video Player + Synchronized Timeline (7 Cols) */}
           <div className="lg:col-span-7 space-y-6">
-            
+
             <EarthVideoPlayer
               station={selectedStation}
               isPlaying={isPlaying}
@@ -441,7 +441,7 @@ export default function Jukebox({
 
           {/* Right Column: Audio Stem Mixer + Real-time Visualizer + Voice Mapping Card (5 Cols) */}
           <div className="lg:col-span-5 space-y-6">
-            
+
             <AudioVisualizer
               isPlaying={isPlaying}
               color={selectedStation.accentColor}
@@ -458,11 +458,11 @@ export default function Jukebox({
             />
 
             {/* Voice Mapping & NASA SVS Telemetry Info Card */}
-            <div className="p-5 rounded-2xl bg-space-850 border border-space-700 space-y-3 shadow-xl">
-              <div className="flex items-center justify-between pb-2 border-b border-space-700">
+            <div className="p-5 rounded-2xl bg-[#EFECE6] border border-[#DCD7CD] space-y-3 shadow-xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#DCD7CD]">
                 <div className="flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-earth-amber" />
-                  <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                  <Sliders className="w-4 h-4 text-[#D97706]" />
+                  <h4 className="text-xs font-mono font-bold text-[#18181B] uppercase tracking-wider">
                     {selectedStation.voiceName}
                   </h4>
                 </div>
@@ -470,33 +470,33 @@ export default function Jukebox({
                   href={selectedStation.svsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-mono text-earth-cyan flex items-center gap-1 hover:underline"
+                  className="text-[10px] font-mono text-[#D97706] flex items-center gap-1 hover:underline"
                 >
                   <span>{selectedStation.svsId} Official Page</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
 
-              <p className="text-xs text-slate-200 font-sans leading-relaxed">
+              <p className="text-xs text-[#18181B] font-sans leading-relaxed">
                 {selectedStation.sonificationApproach}
               </p>
 
               <div className="space-y-1.5 pt-1">
                 {selectedStation.soundMapping.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center text-xs p-2.5 rounded-xl bg-space-900 border border-space-700/80">
-                    <span className="text-slate-200 font-sans font-medium truncate max-w-[50%]">
+                  <div key={idx} className="flex justify-between items-center text-xs p-2.5 rounded-xl bg-[#FAF9F6] border border-[#DCD7CD]/80">
+                    <span className="text-[#18181B] font-sans font-medium truncate max-w-[50%]">
                       {item.data}
                     </span>
-                    <span className="text-earth-cyan font-mono text-[11px] font-bold truncate max-w-[48%] text-right">
+                    <span className="text-[#D97706] font-mono text-[11px] font-bold truncate max-w-[48%] text-right">
                       {item.sound}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="text-[11px] font-mono text-slate-400 pt-1 flex justify-between">
+              <div className="text-[11px] font-mono text-[#71717A] pt-1 flex justify-between">
                 <span>Sensor: {selectedStation.telemetry.instrument || selectedStation.telemetry.platform}</span>
-                <span className="text-earth-teal">EarthPulse Synchronized</span>
+                <span className="text-[#D97706]">EarthPulse Synchronized</span>
               </div>
             </div>
 
