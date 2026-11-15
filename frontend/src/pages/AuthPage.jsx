@@ -14,8 +14,8 @@ import {
 } from 'lucide-react';
 import { authService } from '../services/authService';
 
-export default function AuthPage({ onBack, onAuthenticated }) {
-  const [mode, setMode] = useState('login');
+export default function AuthPage({ onBack, onAuthenticated, initialMode = 'login' }) {
+  const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -464,7 +464,7 @@ export default function AuthPage({ onBack, onAuthenticated }) {
               onClick={onBack}
               className="w-full rounded-xl border border-[#7894A8]/45 bg-white/5 px-5 py-3.5 text-sm font-semibold text-[#E0ECF5] transition hover:border-[#92E8F0] hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#85E8F1]"
             >
-              Continue as Guest
+              Back to public home
             </button>
 
             <p className="mt-7 text-center text-xs text-[#ABC1D3]">

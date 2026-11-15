@@ -15,10 +15,14 @@ import {
 import { NASA_CHALLENGE_INFO } from '../data/stations';
 import { audioEngine } from '../services/audioEngine';
 
-export default function Hero({ onLaunchJukebox, onSelectStation }) {
+export default function Hero({ onLaunchJukebox, onSelectStation, canInteract = false, onRequireAuth }) {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
 
   const handleAuditoryDemo = () => {
+    if (!canInteract) {
+      onRequireAuth?.('login');
+      return;
+    }
     setIsPlayingDemo(true);
     audioEngine.playStationPreview('svs-4950');
     setTimeout(() => setIsPlayingDemo(false), 900);
@@ -91,7 +95,7 @@ export default function Hero({ onLaunchJukebox, onSelectStation }) {
               }`}
             >
               <Volume2 className={`w-5 h-5 ${isPlayingDemo ? 'text-earth-cyan animate-bounce' : 'text-slate-300'}`} />
-              <span>{isPlayingDemo ? 'Synthesizing Voices...' : 'Audition Voice Signature'}</span>
+              <span>{!canInteract ? 'Sign in to audition' : isPlayingDemo ? 'Synthesizing Voices...' : 'Audition Voice Signature'}</span>
             </button>
           </div>
 

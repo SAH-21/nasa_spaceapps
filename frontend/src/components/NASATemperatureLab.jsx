@@ -61,7 +61,7 @@ export default function NASATemperatureLab() {
     });
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/science/temperature?${query}`);
+      const response = await fetch(`${API_BASE_URL}/api/science/temperature?${query}`, { credentials: 'include' });
       const body = await response.json().catch(() => null);
       if (!response.ok) {
         throw new Error(typeof body?.detail === 'string' ? body.detail : `NASA data request failed (${response.status})`);

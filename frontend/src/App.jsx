@@ -15,8 +15,12 @@ export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedStation, setSelectedStation] = useState(STATIONS[0]);
   const [pendingMix, setPendingMix] = useState(null);
+  const [homeScienceStopSignal, setHomeScienceStopSignal] = useState(0);
 
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const [postAuthView, setPostAuthView] = useState('home');
+  const [postAuthStation, setPostAuthStation] = useState(null);
   const [session, setSession] = useState(null);
   const [authChecking, setAuthChecking] = useState(true);
   const [authBusy, setAuthBusy] = useState(false);
@@ -44,9 +48,8 @@ export default function App() {
         if (active && data?.user) {
           sessionRef.current = data;
           setSession(data);
-          setCurrentView((view) =>
-            view === 'home' ? 'dashboard' : view
-          );
+          setCurrentView('home');
+          setAuthOpen(false);
         }
       })
       .catch(() => {})
@@ -139,7 +142,15 @@ export default function App() {
         number >= 1 &&
         number <= STATIONS.length
       ) {
-        setSelectedStation(STATIONS[number - 1]);
+        if (sessionRef.current?.user) {
+          setSelectedStation(STATIONS[number - 1]);
+        } else {
+          setAuthMode('login');
+          setPostAuthView('jukebox');
+          setPostAuthStation(STATIONS[number - 1]);
+          setAuthMessage('Sign in or create an account to open a station.');
+          setAuthOpen(true);
+        }
       } else if (event.key.toLowerCase() === 'a') {
         setIsAccessibilityOpen((value) => !value);
       }
@@ -152,15 +163,25 @@ export default function App() {
     };
   }, [authOpen]);
 
+  function openAuth(mode = 'login', destination = 'home', station = null) {
+    setAuthMode(mode);
+    setPostAuthView(destination);
+    setPostAuthStation(station);
+    setAuthMessage(destination === 'home' ? '' : 'Sign in or create an account to use this feature.');
+    setAuthOpen(true);
+    audioEngine.stopEarthPulse();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
   function handleNavigate(view) {
-    if (view === 'dashboard' && !session?.user) {
-      setAuthMessage('');
-      setAuthOpen(true);
+    if ((view === 'dashboard' || view === 'jukebox') && !sessionRef.current?.user) {
+      openAuth('login', view);
       return;
     }
 
     setAuthOpen(false);
     setAuthMessage('');
+    audioEngine.stopEarthPulse();
     setCurrentView(view);
 
     window.scrollTo({
@@ -170,7 +191,12 @@ export default function App() {
   }
 
   function handleSelectStation(station) {
+    if (!sessionRef.current?.user) {
+      openAuth('login', 'jukebox', station);
+      return;
+    }
     setPendingMix(null);
+    setHomeScienceStopSignal(value => value + 1);
     setSelectedStation(station);
 
     if (audioDescriptions) {
@@ -204,7 +230,11 @@ export default function App() {
     setSession(data);
     setAuthChecking(false);
     setAuthOpen(false);
-    setCurrentView('dashboard');
+    setCurrentView(postAuthView);
+    if (postAuthStation) setSelectedStation(postAuthStation);
+    setPostAuthView('home');
+    setPostAuthStation(null);
+    audioEngine.toggleSpeech(true);
     setAuthMessage('Successfully signed in to Earthsonic.');
 
     window.scrollTo({
@@ -229,6 +259,10 @@ export default function App() {
       setFavoriteBusyIds([]);
       setAuthOpen(false);
       setCurrentView('home');
+      setPostAuthView('home');
+      setPostAuthStation(null);
+      audioEngine.stopEarthPulse();
+      audioEngine.toggleSpeech(false);
       setAuthMessage('You have signed out successfully.');
     } catch (error) {
       setAuthMessage(
@@ -326,11 +360,8 @@ export default function App() {
         user={session?.user || null}
         authChecking={authChecking}
         authBusy={authBusy}
-        onSignIn={() => {
-          setAuthMessage('');
-          setAuthOpen(true);
-          window.scrollTo({ top: 0, behavior: 'auto' });
-        }}
+        onSignIn={() => openAuth('login')}
+        onSignUp={() => openAuth('signup')}
         onSignOut={handleSignOut}
       />
 
@@ -354,6 +385,8 @@ export default function App() {
       <main className="flex-1">
         {authOpen ? (
           <AuthPage
+            key={authMode}
+            initialMode={authMode}
             onBack={() => setAuthOpen(false)}
             onAuthenticated={handleAuthenticated}
           />
@@ -372,7 +405,7 @@ export default function App() {
             onLaunchJukebox={() => handleNavigate('jukebox')}
             onExplore={() => handleNavigate('home')}
           />
-        ) : currentView === 'jukebox' ? (
+        ) : currentView === 'jukebox' && session?.user ? (
           <Jukebox
             user={session?.user || null}
             csrfToken={session?.csrf_token || ''}
@@ -384,6 +417,9 @@ export default function App() {
           />
         ) : (
           <Home
+            isAuthenticated={Boolean(session?.user)}
+            onRequestAuth={(mode) => openAuth(mode, 'home')}
+            scienceStopSignal={homeScienceStopSignal}
             stations={STATIONS}
             selectedStation={selectedStation}
             onSelectStation={handleSelectStation}

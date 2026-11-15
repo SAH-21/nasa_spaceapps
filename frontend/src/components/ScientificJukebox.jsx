@@ -118,7 +118,8 @@ export default function ScientificJukebox({ onSciencePlay, stopSignal = 0 }) {
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/science/climate?${query}`, {
-        signal: controller.signal
+        signal: controller.signal,
+        credentials: 'include'
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) {

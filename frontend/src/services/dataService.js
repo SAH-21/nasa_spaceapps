@@ -87,6 +87,7 @@ export const dataService = {
     try {
       const res = await fetch(baseUrl + '/api/sonification', {
         method: 'GET',
+        credentials: 'include',
         signal: controller.signal,
         headers: {
           Accept: 'application/json'

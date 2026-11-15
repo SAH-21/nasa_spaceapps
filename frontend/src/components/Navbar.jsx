@@ -22,6 +22,7 @@ export default function Navbar({
   authChecking,
   authBusy,
   onSignIn,
+  onSignUp,
   onSignOut
 }) {
   return (
@@ -167,6 +168,8 @@ export default function Navbar({
                 </button>
               </div>
             ) : (
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={onSignUp} className="rounded-xl border border-cyan-400/40 bg-white/5 px-3 py-2.5 text-xs font-bold text-cyan-200 transition hover:bg-white/10 sm:text-sm">Sign Up</button>
               <button
                 type="button"
                 onClick={onSignIn}
@@ -178,6 +181,7 @@ export default function Navbar({
                   Sign In
                 </span>
               </button>
+              </div>
             )}
           </nav>
         </div>

@@ -9,6 +9,7 @@ from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 
 from backend.auth_database import (
@@ -84,6 +85,18 @@ app = FastAPI(
     description="NASA Space Apps Challenge 2026 - Team Vertex",
     version="1.4.0"
 )
+
+@app.middleware('http')
+async def require_login_for_scientific_api(request: Request, call_next):
+    path = request.url.path
+    requires_login = path == '/api/sonification' or path.startswith('/api/science/')
+    if requires_login and request.method != 'OPTIONS':
+        try:
+            get_authenticated_session(request, get_auth_db_path())
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={'detail': 'Sign in to access Earthsonic scientific features'})
+    return await call_next(request)
+
 
 app.add_middleware(
     CORSMiddleware,

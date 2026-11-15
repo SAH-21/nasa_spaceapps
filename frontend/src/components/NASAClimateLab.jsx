@@ -84,7 +84,7 @@ export default function NASAClimateLab() {
       end: end.replaceAll('-', '')
     });
     try {
-      const response = await fetch(`${API_BASE_URL}/api/science/climate?${query}`);
+      const response = await fetch(`${API_BASE_URL}/api/science/climate?${query}`, { credentials: 'include' });
       const body = await response.json().catch(() => null);
       if (!response.ok) {
         const message = typeof body?.detail === 'string'

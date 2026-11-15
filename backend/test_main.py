@@ -1,8 +1,30 @@
+from backend.auth_security import hash_password
 
+import pytest
 from fastapi.testclient import TestClient
+from backend import main as backend_main
+from backend.auth_database import create_user
+from backend.auth_sessions import create_session
 from backend.main import app
 
 client = TestClient(app)
+
+
+@pytest.fixture
+def authorized_client(monkeypatch, tmp_path):
+    db_path = tmp_path / 'science-test.sqlite3'
+    monkeypatch.setattr(backend_main, 'get_auth_db_path', lambda: db_path)
+    user_id = create_user('science-test@example.com', hash_password('EarthsonicTestPassword2026!'), db_path)
+    session_token = create_session(user_id, db_path)
+    member_client = TestClient(app)
+    member_client.cookies.set('earthsonic_session', session_token)
+    return member_client
+
+
+def test_science_routes_require_login():
+    assert client.get('/api/sonification').status_code == 401
+    assert client.get('/api/science/temperature').status_code == 401
+    assert client.get('/api/science/climate').status_code == 401
 
 
 def test_health_endpoint():
@@ -17,8 +39,8 @@ def test_health_endpoint():
     assert data["backend"] == "FastAPI"
 
 
-def test_sonification_endpoint():
-    response = client.get("/api/sonification")
+def test_sonification_endpoint(authorized_client):
+    response = authorized_client.get("/api/sonification")
 
     assert response.status_code == 200
 
@@ -64,7 +86,7 @@ def test_cors_preflight():
     assert "GET" in response.headers["access-control-allow-methods"]
 
 
-def test_missing_image_returns_404(monkeypatch, tmp_path):
+def test_missing_image_returns_404(monkeypatch, tmp_path, authorized_client):
     missing_image = tmp_path / "missing.jpg"
 
     monkeypatch.setattr(
@@ -72,7 +94,7 @@ def test_missing_image_returns_404(monkeypatch, tmp_path):
         missing_image
     )
 
-    response = client.get("/api/sonification")
+    response = authorized_client.get("/api/sonification")
 
     assert response.status_code == 404
 

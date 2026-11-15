@@ -1,5 +1,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
+import ScientificJukebox from '../components/ScientificJukebox';
+import GuestSciencePreview from '../components/GuestSciencePreview';
 import StationSelector from '../components/StationSelector';
 import { 
   Sliders, 
@@ -18,6 +20,9 @@ import {
 import { NASA_CHALLENGE_INFO } from '../data/stations';
 
 export default function Home({ 
+  isAuthenticated = false,
+  onRequestAuth,
+  scienceStopSignal = 0,
   stations, 
   selectedStation, 
   onSelectStation, 
@@ -30,7 +35,17 @@ export default function Home({
       <Hero 
         onLaunchJukebox={onLaunchJukebox} 
         onSelectStation={onSelectStation} 
+        canInteract={isAuthenticated}
+        onRequireAuth={onRequestAuth}
       />
+
+      {isAuthenticated ? (
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <ScientificJukebox stopSignal={scienceStopSignal} />
+        </div>
+      ) : (
+        <GuestSciencePreview onRequestAuth={onRequestAuth} />
+      )}
 
       {/* 2. Station Selector (All 10 Official NASA SVS Stations) */}
       <StationSelector
