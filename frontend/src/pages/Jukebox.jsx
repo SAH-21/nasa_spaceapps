@@ -5,6 +5,7 @@ import TrackMixer from '../components/TrackMixer';
 import AudioVisualizer from '../components/AudioVisualizer';
 import Timeline from '../components/Timeline';
 import MixStudio from '../components/MixStudio';
+import ScientificJukebox from '../components/ScientificJukebox';
 import { STATIONS } from '../data/stations';
 import { dataService } from '../services/dataService';
 import { audioEngine } from '../services/audioEngine';
@@ -43,6 +44,7 @@ export default function Jukebox({
   const [overlayActive, setOverlayActive] = useState(true);
   const [timelineData, setTimelineData] = useState(null);
   const [speechActive, setSpeechActive] = useState(true);
+  const [scienceStopSignal, setScienceStopSignal] = useState(0);
 
   // EarthPulse FastAPI backend integration state
   const [backendUrl, setBackendUrl] = useState('http://localhost:8000');
@@ -121,6 +123,7 @@ export default function Jukebox({
     setIsPlaying(false);
     setCurrentTime(0);
     audioEngine.stopEarthPulse();
+    setScienceStopSignal((value) => value + 1);
     audioEngine.toggleSpeech(settings.speech_active);
     audioEngine.setMasterVolume(
       settings.is_muted ? 0 : settings.master_volume / 100
@@ -138,6 +141,10 @@ export default function Jukebox({
 
     setTracksState(restoredTracks);
   }, [pendingMix, selectedStation.id]);
+
+  useEffect(() => {
+    setScienceStopSignal((value) => value + 1);
+  }, [selectedStation.id]);
 
   // Real-time audio frequency stream modulation during playback
   useEffect(() => {
@@ -159,6 +166,7 @@ export default function Jukebox({
     const nextState = !isPlaying;
     setIsPlaying(nextState);
     if (nextState) {
+      setScienceStopSignal((value) => value + 1);
       audioEngine.init();
       audioEngine.resume();
       if (speechActive) {
@@ -377,6 +385,17 @@ export default function Jukebox({
             tracks: tracksState
           }}
           onLoadMix={onLoadMix}
+        />
+
+        <ScientificJukebox
+          stopSignal={scienceStopSignal}
+          onSciencePlay={() => {
+            setIsPlaying(false);
+            audioEngine.stopEarthPulse();
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+              window.speechSynthesis.cancel();
+            }
+          }}
         />
 
         {/* Workstation Grid */}
