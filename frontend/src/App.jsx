@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+import './styles/earthsonic-redesign.css';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Jukebox from './pages/Jukebox';
