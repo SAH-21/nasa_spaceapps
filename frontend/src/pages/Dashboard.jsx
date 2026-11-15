@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import MixStudio from '../components/MixStudio';
 import NASATemperatureLab from '../components/NASATemperatureLab';
+import NASAClimateLab from '../components/NASAClimateLab';
 import {
   ArrowRight,
   AudioLines,
@@ -299,6 +300,8 @@ export default function Dashboard({
         />
 
         <NASATemperatureLab />
+
+        <NASAClimateLab />
 
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
           <section className="rounded-2xl border border-[#294057] bg-[#111F32] p-6">

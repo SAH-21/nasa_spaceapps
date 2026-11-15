@@ -25,6 +25,7 @@ from backend.auth_sessions import (
     revoke_session
 )
 from backend.nasa_power_api import router as science_router
+from backend.nasa_climate_api import router as climate_router
 from backend.image_processing import IMAGE_PATH
 from backend.sonification import generate_sonification
 from backend.user_favorites import (
@@ -94,6 +95,7 @@ app.add_middleware(
 
 
 app.include_router(science_router)
+app.include_router(climate_router)
 
 class RegisterRequest(BaseModel):
     email: EmailStr
